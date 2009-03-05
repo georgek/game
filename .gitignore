@@ -1,0 +1,10 @@
+#ignore stuff
+#compiled objects
+*.o
+#autosaved stuff
+*~
+\#*\#
+#the program
+game
+#textures
+textures/
