@@ -17,7 +17,7 @@ int main (int argc, char* argv[])
     // do not let getopt print errors to stderr
     opterr = 0;
     
-    int c;
+    char c;
     while ((c = getopt(argc, argv, "w:h:")) != -1) {
 	switch (c) {
 	case 'w':
