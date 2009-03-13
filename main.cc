@@ -8,6 +8,10 @@
 #include <cstdlib>
 #include <unistd.h>
 
+#include "renderable.h"
+#include "collidable.h"
+#include "controllable.h"
+
 int main (int argc, char* argv[]) 
 {
     // parse arguments
@@ -68,3 +72,4 @@ int main (int argc, char* argv[])
     return 0;
     
 }
+

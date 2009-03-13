@@ -9,10 +9,15 @@
 #ifndef RENDERABLE_H
 #define RENDERABLE_H
 
+#include "tools/shared_ptr.h"
+
 class Renderable
 {
 public:
     virtual void draw() = 0;
+
+    // convenience typedef
+    typedef gk::shared_ptr<Renderable> Ptr;
 };
 
 #endif // RENDERABLE_H
