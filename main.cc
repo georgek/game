@@ -8,9 +8,7 @@
 #include <cstdlib>
 #include <unistd.h>
 
-#include "renderable.h"
-#include "collidable.h"
-#include "controllable.h"
+#include "world.h"
 
 int main (int argc, char* argv[]) 
 {
