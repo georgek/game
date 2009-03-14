@@ -8,6 +8,11 @@
 #ifndef WORLD_H
 #define WORLD_H
 
+#include <vector>
+#include <map>
+#include <string>
+#include <fstream>
+
 #include "SDL.h"
 
 // implements renderable
@@ -20,7 +25,8 @@
 class World : public Renderable, public Collidable, public Controllable
 {
 public:
-    World();
+    // worldfile is a file describing the world to be created
+    World(const std::string& worldfile);
     virtual ~World();
 
     // set world offset (e.g. to be done by main character)
@@ -35,16 +41,30 @@ public:
 
     // implement collidable methods
     // for simple circles
-    virtual bool isCollidedR(float centre_x, float centre_y, float radius);
+    virtual bool isCollidedR(const float& centre_x, 
+			     const float& centre_y, 
+			     const float& radius) const;
+
     // for arbitrary shapes
-    virtual bool isCollidedV(int n_vertices, float* vert_x, float* vert_y);
+    virtual bool isCollidedV(const std::vector<float>& vertices) const;
 
     // implement controllable method
     virtual void update(SDL_Event& event);
 
 private:
+    // the worldfile that this world is made from
+    std::ifstream worldfile;
+    
     // current offset of world
     float xOffset, yOffset;
+
+    // containers for references to objects
+    // multimap of renderables
+    std::multimap<int, Renderable::Ptr> renderables;
+    // multimap of collidables
+    std::multimap<int, Collidable::Ptr> collidables;
+    // vector of controllables
+    std::vector<Controllable::Ptr> controllables;
 };
 
 #endif /* WORLD_H */

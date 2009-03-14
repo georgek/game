@@ -64,8 +64,10 @@ int main (int argc, char* argv[])
 
     // end of argument parsing
 
+    // make world
+    World world ("test");
+
     std::cout << "Lul it started." << std::endl;
-    
     
     return 0;
     

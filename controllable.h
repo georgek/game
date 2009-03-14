@@ -9,12 +9,14 @@
 #ifndef CONTROLLABLE_H
 #define CONTROLLABLE_H
 
+#include "SDL.h"
+
 #include "tools/shared_ptr.h"
 
 class Controllable 
 {
 public:
-    virtual void update() = 0;
+    virtual void update(SDL_Event& event) = 0;
 
     // convenience typdef
     typedef gk::shared_ptr<Controllable> Ptr;
