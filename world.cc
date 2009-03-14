@@ -7,18 +7,23 @@
 
 #include <vector>
 #include <string>
+#include <stdexcept>
 
 #include "SDL.h"
 #include "SDL_opengl.h"
 
 #include "world.h"
 
-World::World (const std::string& worldfile) :
-    worldfile (worldfile.c_str()),
+World::World (const std::string& inputworldfile) :
+    worldfile (inputworldfile.c_str()),
     xOffset (0),
     yOffset (0) 
 {
-    // construct stuffx
+    if (!worldfile.is_open()) {
+	std::string s = "No such worldfile: ";
+	s += inputworldfile;
+	throw std::runtime_error (s);
+    }
 }
 
 World::~World () 
