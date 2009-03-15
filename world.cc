@@ -16,6 +16,7 @@
 #include "world.h"
 #include "point.h"
 #include "turret.h"
+#include "tank.h"
 
 World::World (const std::string& inputworldfile) :
     worldfile (inputworldfile.c_str()),
@@ -35,8 +36,17 @@ World::World (const std::string& inputworldfile) :
     Turret::Ptr turret (new Turret(this, "textures/tankturret3.png", 
 				   128, 128, 30));
     // add to renderable map
-    renderables.insert(std::make_pair(1, turret));
+    renderables.insert(std::make_pair(2, turret));
+    // add to collidable map
+    collidables.insert(std::make_pair(2, turret));
     
+    // add tank
+    Tank::Ptr tank (new Tank(this, turret, "textures/tankbody3.png",
+			     128, 128, 10, 100, 30));
+    // add to renderable map
+    renderables.insert(std::make_pair(1, tank));
+    // add to collidable map
+    collidables.insert(std::make_pair(1, tank));
 }
 
 World::~World () 
