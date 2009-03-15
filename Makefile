@@ -1,4 +1,4 @@
-objects = main.o timer.o texture.o world.o
+objects = main.o timer.o texture.o point.o world.o turret.o
 
 CXXFLAGS =  -g -Wall -ansi -pedantic `sdl-config --cflags`
 
@@ -11,7 +11,11 @@ timer.o : timer.h
 
 texture.o : texture.h
 
+point.o : point.h
+
 world.o : renderable.h collidable.h controllable.h world.h
+
+turret.o : renderable.h collidable.h turret.h texture.h
 
 clean :
 	rm game $(objects)
