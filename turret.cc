@@ -12,7 +12,7 @@
 #include "texture.h"
 #include "world.h"
 
-Turret::Turret(const World* world, const std::string& texturename,
+Turret::Turret(World* world, const std::string& texturename,
 	       const int& init_x, const int& init_y,
 	       const int& rpm) :
     world (world),
@@ -72,8 +72,10 @@ void Turret::draw()
     glPushMatrix();
     // move to correct screen position
     glTranslatef(screenpos.getDispX(), screenpos.getDispY(), 0);
-    // rotate to face up
-    glRotatef(90, 0, 0, 1);
+
+    // align properly on tank
+    Point alignvector (22, 0);
+    glTranslatef(alignvector.getDispX(), 0, 0);
     
     // call list
     glCallList(drawing_list);

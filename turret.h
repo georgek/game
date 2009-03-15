@@ -23,7 +23,7 @@
 class Turret : public Renderable, public Collidable 
 {
 public:
-    Turret(const World* world, const std::string& texture,
+    Turret(World* world, const std::string& texture,
 	   const int& init_x, const int& init_y,
 	   const int& rpm);
     virtual ~Turret();
@@ -46,7 +46,7 @@ public:
 
 protected:
     // pointer to world
-    const World* world;
+    World* world;
     // world position
     Point worldpos;
     // current angle
