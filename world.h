@@ -22,6 +22,9 @@
 // implements controllable
 #include "controllable.h"
 
+#include "point.h"
+#include "timer.h"
+
 class World : public Renderable, public Collidable, public Controllable
 {
 public:
@@ -46,7 +49,7 @@ public:
 			     const float& radius) const;
 
     // for arbitrary shapes
-    virtual bool isCollidedV(const std::vector<float>& vertices) const;
+    virtual bool isCollidedV(const std::vector<Point>& vertices) const;
 
     // implement controllable method
     virtual void update(SDL_Event& event);
@@ -60,11 +63,17 @@ private:
 
     // containers for references to objects
     // multimap of renderables
-    std::multimap<int, Renderable::Ptr> renderables;
+    typedef std::multimap<int, Renderable::Ptr> RendMap;
+    RendMap renderables;
     // multimap of collidables
-    std::multimap<int, Collidable::Ptr> collidables;
+    typedef std::multimap<int, Collidable::Ptr> CollMap;
+    CollMap collidables;
     // vector of controllables
-    std::vector<Controllable::Ptr> controllables;
+    typedef std::vector<Controllable::Ptr> ConVect;
+    ConVect controllables;
+
+    // timer
+    Timer timer;
 };
 
 #endif /* WORLD_H */

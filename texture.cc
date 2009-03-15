@@ -1,7 +1,10 @@
 // implementation of Texture class
 // George Kettleborough <g.kettleborough@uea.ac.uk>
-// PNG reading code is based on: <http://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures>
+// 
+// PNG reading code is based on:
+// <http://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures>
 // which is available under GFDL license
+//
 // Raw reading code is from SDL's lecture notes
 
 #include <string>
@@ -16,8 +19,8 @@
 
 #include "texture.h"
 
-Texture::Texture(std::string filename, texture_types type, int width,
-		 int height) :
+Texture::Texture(const std::string& filename, texture_types type, 
+		 const int& width, const int& height) :
     filename (filename),
     type (type),
     tex_id (0),
@@ -58,32 +61,32 @@ Texture::~Texture()
     clean_up();
 }
 
-GLuint Texture::getTexId() 
+GLuint Texture::getTexId() const
 {
     return tex_id;
 }
 
-GLsizei Texture::getWidth() 
+GLsizei Texture::getWidth() const
 {
     return width;
 }
 
-GLsizei Texture::getHeight() 
+GLsizei Texture::getHeight() const
 {
     return height;
 }
 
-texture_types Texture::getType() 
+texture_types Texture::getType() const
 {
     return type;
 }
 
-int Texture::getBitDepth() 
+int Texture::getBitDepth() const
 {
     return bit_depth;
 }
 
-int Texture::getColourType() 
+int Texture::getColourType() const
 {
     return colour_type;
 }

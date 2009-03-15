@@ -32,22 +32,22 @@ public:
     // width and height is required for some file types ie. raw for
     // PNG these values will be ignored (the values from the file will
     // be used)
-    Texture(std::string filename, 
+    Texture(const std::string& filename, 
 	    texture_types type, 
-	    int width = 0, 
-	    int height = 0);
+	    const int& width = 0, 
+	    const int& height = 0);
     ~Texture();
     
-    GLuint		getTexId();
-    GLsizei		getWidth();
-    GLsizei		getHeight();
-    texture_types	getType();
-    int			getBitDepth();
+    GLuint		getTexId() const;
+    GLsizei		getWidth() const;
+    GLsizei		getHeight() const;
+    texture_types	getType() const;
+    int			getBitDepth() const;
     // color type follows the PNG specification
     // only two colour types are supported at the moment:
     // 2: RGB
     // 6: RGBA
-    int			getColourType();
+    int			getColourType() const;
 
     typedef std::auto_ptr<Texture> Ptr;
     

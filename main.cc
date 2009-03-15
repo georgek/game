@@ -13,6 +13,7 @@
 #include "SDL.h"
 #include "SDL_opengl.h"
 
+#include "point.h"
 #include "timer.h"
 #include "world.h"
 
@@ -96,6 +97,11 @@ int main (int argc, char* argv[])
 
     // end of argument parsing
 
+    // initialise SDL and OpenGL
+    if (!init(width, height)) {
+	return 1;
+    }
+
     // make world
     std::auto_ptr<World> world;
     try{
@@ -105,11 +111,6 @@ int main (int argc, char* argv[])
     catch (std::runtime_error e) {
 	std::cerr << "Error: " << e.what() << std::endl;
 	// exit
-	return 1;
-    }
-
-    // initialise SDL and OpenGL
-    if (!init(width, height)) {
 	return 1;
     }
 
@@ -143,7 +144,7 @@ int main (int argc, char* argv[])
 
 	// draw world
 	world->draw();
-	
+
 	// cap frame rate
 	if (FPS_CAP && fpsCap.get_ticks() < 1000 / fps) {
 	    SDL_Delay ((1000 / fps) - fpsCap.get_ticks());
@@ -164,9 +165,9 @@ int main (int argc, char* argv[])
 
     // shut down SDL
     clean_up();
-    
+
     // exit
-    return 0;    
+    return 0;
 }
 
 // initialises SDL
@@ -234,7 +235,7 @@ bool initGL(const int& width, const int& height)
     // print some numbers
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
     std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-    std::cout << "Renderer:  " << glGetString(GL_RENDERER) << std::endl;
+    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 
     return true;
 }
