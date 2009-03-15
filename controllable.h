@@ -11,7 +11,7 @@
 
 #include "SDL.h"
 
-#include "tools/shared_ptr.h"
+#include <tr1/memory>
 
 class Controllable 
 {
@@ -19,7 +19,7 @@ public:
     virtual void update(SDL_Event& event) = 0;
 
     // convenience typdef
-    typedef gk::shared_ptr<Controllable> Ptr;
+    typedef std::tr1::shared_ptr<Controllable> Ptr;
 };
 
 #endif // CONTROLLABLE_H

@@ -9,7 +9,7 @@
 #ifndef RENDERABLE_H
 #define RENDERABLE_H
 
-#include "tools/shared_ptr.h"
+#include <tr1/memory>
 
 class Renderable
 {
@@ -17,7 +17,7 @@ public:
     virtual void draw() = 0;
 
     // convenience typedef
-    typedef gk::shared_ptr<Renderable> Ptr;
+    typedef std::tr1::shared_ptr<Renderable> Ptr;
 };
 
 #endif // RENDERABLE_H

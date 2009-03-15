@@ -11,8 +11,9 @@
 #define COLLIDABLE_H
 
 #include <vector>
+#include <tr1/memory>
 
-#include "tools/shared_ptr.h"
+#include "point.h"
 
 class Collidable 
 {
@@ -21,10 +22,10 @@ public:
 			     const float& centre_y, 
 			     const float& radius) const = 0;
 
-    virtual bool isCollidedV(const std::vector<float>& vertices) const = 0;
+    virtual bool isCollidedV(const std::vector<Point>& vertices) const = 0;
 
     // convenience typdef
-    typedef gk::shared_ptr<Collidable> Ptr;
+    typedef std::tr1::shared_ptr<Collidable> Ptr;
 };
 
 #endif // COLLIDABLE_H
