@@ -93,3 +93,7 @@ bool Tank::isCollidedV(const std::vector<Point>& vertices) const
     return false;
 }
 
+void Tank::update(SDL_Event& event) 
+{
+    // update stuff
+}

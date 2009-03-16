@@ -19,11 +19,12 @@
 #include "timer.h"
 #include "renderable.h"
 #include "collidable.h"
+#include "controllable.h"
 #include "point.h"
 #include "world.h"
 #include "turret.h"
 
-class Tank : public Renderable, public Collidable
+class Tank : public Renderable, public Collidable, public Controllable
 {
 public:
     // constructor needs pointer to world, pointer to turret, texture
@@ -43,6 +44,9 @@ public:
 			     const float& centre_y,
 			     const float& radius) const;
     virtual bool isCollidedV(const std::vector<Point>& vertices) const;
+
+    // control functions
+    virtual void update(SDL_Event& event);
 
     // convenience typedef
     typedef std::tr1::shared_ptr<Tank> Ptr;
