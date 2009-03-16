@@ -74,8 +74,8 @@ void Turret::draw()
     glTranslatef(screenpos.getDispX(), screenpos.getDispY(), 0);
 
     // align properly on tank
-    Point alignvector (22, 0);
-    glTranslatef(alignvector.getDispX(), 0, 0);
+    Point alignvector (0, 28);
+    glTranslatef(0, alignvector.getDispY(), 0);
     
     // call list
     glCallList(drawing_list);

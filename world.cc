@@ -33,7 +33,7 @@ World::World (const std::string& inputworldfile) :
     // for now just put in some test objects
 
     // add a turret
-    Turret::Ptr turret (new Turret(this, "textures/tankturret3.png", 
+    Turret::Ptr turret (new Turret(this, "textures/tankturret4.png", 
 				   128, 128, 30));
     // add to renderable map
     renderables.insert(std::make_pair(2, turret));
@@ -41,12 +41,14 @@ World::World (const std::string& inputworldfile) :
     collidables.insert(std::make_pair(2, turret));
     
     // add tank
-    Tank::Ptr tank (new Tank(this, turret, "textures/tankbody3.png",
+    Tank::Ptr tank (new Tank(this, turret, "textures/tankbody4.png",
 			     128, 128, 10, 100, 30));
     // add to renderable map
     renderables.insert(std::make_pair(1, tank));
     // add to collidable map
     collidables.insert(std::make_pair(1, tank));
+    // add to controllable vector
+    controllables.push_back(tank);
 }
 
 World::~World () 
@@ -105,5 +107,9 @@ bool World::isCollidedV (const std::vector<Point>& vertices) const
 
 void World::update (SDL_Event& event) 
 {
-    // update world
+    // update all controllables
+    ConVect::iterator pos;
+    for (pos = controllables.begin(); pos != controllables.end(); ++pos) {
+	(*pos)->update(event);
+    }
 }
