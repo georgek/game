@@ -161,6 +161,13 @@ int main (int argc, char* argv[])
 	    frames = 0;
 	    fpsCount.start();
 	}
+
+	// show any error
+	GLenum errcode;
+	if ((errcode = glGetError()) != GL_NO_ERROR) {
+	    std::cout << "OpenGL error: " << gluErrorString(errcode) 
+		      << std::endl;
+	}
     }
 
     // shut down SDL
