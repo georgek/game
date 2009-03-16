@@ -10,8 +10,8 @@
 #ifndef COLLIDABLE_H
 #define COLLIDABLE_H
 
-#include <vector>
 #include <tr1/memory>
+#include <vector>
 
 #include "point.h"
 

@@ -8,8 +8,8 @@
 #include "SDL.h"
 #include "SDL_opengl.h"
 
-#include "turret.h"
 #include "texture.h"
+#include "turret.h"
 #include "world.h"
 
 Turret::Turret(World* world, const std::string& texturename,

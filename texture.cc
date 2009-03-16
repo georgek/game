@@ -7,10 +7,10 @@
 //
 // Raw reading code is from SDL's lecture notes
 
-#include <string>
-#include <iostream>
-#include <cstdio>
 #include <algorithm>
+#include <cstdio>
+#include <iostream>
+#include <string>
 
 #include <png.h>
 

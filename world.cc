@@ -5,18 +5,18 @@
 
 // Implementation of World class
 
-#include <vector>
-#include <string>
 #include <stdexcept>
+#include <string>
 #include <tr1/memory>
+#include <vector>
 
 #include "SDL.h"
 #include "SDL_opengl.h"
 
-#include "world.h"
 #include "point.h"
-#include "turret.h"
 #include "tank.h"
+#include "turret.h"
+#include "world.h"
 
 World::World (const std::string& inputworldfile) :
     worldfile (inputworldfile.c_str()),

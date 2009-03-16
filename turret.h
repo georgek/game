@@ -9,15 +9,15 @@
 #ifndef TURRET_H
 #define TURRET_H
 
-#include <vector>
 #include <string>
 #include <tr1/memory>
+#include <vector>
 
-#include "texture.h"
-#include "timer.h"
-#include "renderable.h"
 #include "collidable.h"
 #include "point.h"
+#include "renderable.h"
+#include "texture.h"
+#include "timer.h"
 #include "world.h"
 
 class Turret : public Renderable, public Collidable 

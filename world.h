@@ -8,10 +8,10 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include <vector>
+#include <fstream>
 #include <map>
 #include <string>
-#include <fstream>
+#include <vector>
 
 #include "SDL.h"
 

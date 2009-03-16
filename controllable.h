@@ -9,9 +9,9 @@
 #ifndef CONTROLLABLE_H
 #define CONTROLLABLE_H
 
-#include "SDL.h"
-
 #include <tr1/memory>
+
+#include "SDL.h"
 
 class Controllable 
 {

@@ -8,21 +8,21 @@
 #ifndef TANK_H
 #define TANK_H
 
-#include <vector>
 #include <string>
 #include <tr1/memory>
+#include <vector>
 
 #include "SDL.h"
 #include "SDL_opengl.h"
 
-#include "texture.h"
-#include "timer.h"
-#include "renderable.h"
 #include "collidable.h"
 #include "controllable.h"
 #include "point.h"
-#include "world.h"
+#include "renderable.h"
+#include "texture.h"
+#include "timer.h"
 #include "turret.h"
+#include "world.h"
 
 class Tank : public Renderable, public Collidable, public Controllable
 {
