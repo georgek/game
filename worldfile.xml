@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- reference world file -->
 <world>
-  <map width="10" height="10">
+  <map width="4" height="3">
     <!-- textures -->
-    <texture id="0" filename="tex1.png" type="png" access="yes" />
-    <texture id="1" filename="tex2.png" type="png" access="no" />
+    <texture id="0" filename="tex1.png" type="png" />
+    <texture id="1" filename="tex2.png" type="png" />
     <tiles>
-      1,1,1,1,1,1,1,1,1,1,
-      1,1,1,0,0,0,0,0,1,1,
-      1,1,1,0,0,0,0,1,1,1,
-      1,1,1,0,0,0,0,0,1,1,
-      1,1,0,0,0,1,1,0,0,1,
-      1,1,0,0,0,1,1,0,0,1,
-      1,1,0,0,0,0,1,0,1,1,
-      1,1,1,0,0,0,0,0,1,1,
-      1,1,1,1,0,0,0,0,1,1,
-      1,1,1,1,1,1,1,1,1,1
+      <t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" />
+      <t id="1" x="0" /><t id="0" x="1" /><t id="0" x="1" /><t id="1" x="0" />
+      <t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" />
     </tiles>
     <ornaments>
       <ornament file="oaktree.xml" xpos="256" ypos="256" />
