@@ -49,7 +49,7 @@ void Point::setX (const float& x)
     this->x = x;
 }
 
-void Point::setY (const float& by) 
+void Point::setY (const float& y) 
 {
     this->y = y;
 }
