@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- reference world file -->
+<world>
+  <map width="10" height="10">
+    <!-- textures -->
+    <texture id="0" filename="tex1.png" type="png" access="yes" />
+    <texture id="1" filename="tex2.png" type="png" access="no" />
+    <tiles>
+      1,1,1,1,1,1,1,1,1,1,
+      1,1,1,0,0,0,0,0,1,1,
+      1,1,1,0,0,0,0,1,1,1,
+      1,1,1,0,0,0,0,0,1,1,
+      1,1,0,0,0,1,1,0,0,1,
+      1,1,0,0,0,1,1,0,0,1,
+      1,1,0,0,0,0,1,0,1,1,
+      1,1,1,0,0,0,0,0,1,1,
+      1,1,1,1,0,0,0,0,1,1,
+      1,1,1,1,1,1,1,1,1,1
+    </tiles>
+    <ornaments>
+      <ornament file="oaktree.xml" xpos="256" ypos="256" />
+    </ornaments>
+  </map>
+  <usertank bodytex="body.png" turrettex="turret.png" />
+  <enemies>
+    <tank bodytex="body2.png" turrettex="turret2.png" />
+  </enemies>
+</world>
