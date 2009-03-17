@@ -41,6 +41,9 @@ public:
     void setWorldX (const float& x);
     void setWorldY (const float& y);
 
+    // sets turret angle
+    void setTurretAngle (const float& theta);
+
     // convenience typedef
     typedef std::tr1::shared_ptr<Turret> Ptr;
 

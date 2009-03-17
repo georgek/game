@@ -67,11 +67,12 @@ void Turret::draw()
     timer.start();
     
     // draw turret
-    glLoadIdentity();
-    
     glPushMatrix();
     // move to correct screen position
     glTranslatef(screenpos.getDispX(), screenpos.getDispY(), 0);
+
+    // rotate turret
+    glRotatef(curr_angle, 0, 0, 1);
 
     // align properly on tank
     Point alignvector (0, 28);
@@ -104,3 +105,7 @@ void Turret::setWorldY (const float& y)
     worldpos.setY(y);
 }
 
+void Turret::setTurretAngle (const float& theta) 
+{
+    curr_angle = theta;
+}
