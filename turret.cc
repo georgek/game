@@ -5,6 +5,8 @@
 
 // implements turret class
 
+#include <iostream>
+
 #include "SDL.h"
 #include "SDL_opengl.h"
 
@@ -105,7 +107,21 @@ void Turret::setWorldY (const float& y)
     worldpos.setY(y);
 }
 
+float Turret::getTurretAngle () const
+{
+    return curr_angle;
+}
+
 void Turret::setTurretAngle (const float& theta) 
 {
     curr_angle = theta;
+    if (curr_angle > 360) curr_angle = curr_angle - 360;
+    if (curr_angle < 0) curr_angle = 360 + curr_angle;
+}
+
+void Turret::incTurretAngle (const float& theta) 
+{
+    curr_angle += theta;
+    if (curr_angle > 360) curr_angle = curr_angle - 360;
+    if (curr_angle < 0) curr_angle = 360 + curr_angle;
 }

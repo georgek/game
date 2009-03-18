@@ -16,6 +16,7 @@
 #include "point.h"
 #include "tank.h"
 #include "turret.h"
+#include "usertank.h"
 #include "world.h"
 
 World::World (const std::string& inputworldfile) :
@@ -34,21 +35,38 @@ World::World (const std::string& inputworldfile) :
 
     // add a turret
     Turret::Ptr turret (new Turret(this, "textures/tankturret4.png", 
-				   128, 128, 30));
+				   128, 128, 18));
     // add to renderable map
     renderables.insert(std::make_pair(2, turret));
     // add to collidable map
     collidables.insert(std::make_pair(2, turret));
     
     // add tank
-    Tank::Ptr tank (new Tank(this, turret, "textures/tankbody4.png",
-			     128, 128, 10, 100, 30));
+    UserTank::Ptr tank (new UserTank(this, turret, "textures/tankbody4.png",
+			     128, 128, 10, 100, 18));
     // add to renderable map
     renderables.insert(std::make_pair(1, tank));
     // add to collidable map
     collidables.insert(std::make_pair(1, tank));
     // add to controllable vector
     controllables.push_back(tank);
+
+    // add another
+    // add a turret
+    Turret::Ptr turret2 (new Turret(this, "textures/tankturret4.png", 
+				   256, 256, 18));
+    // add to renderable map
+    renderables.insert(std::make_pair(2, turret2));
+    // add to collidable map
+    collidables.insert(std::make_pair(2, turret2));
+    
+    // add tank
+    Tank::Ptr tank2 (new Tank(this, turret, "textures/tankbody4.png",
+			     256, 256, 10, 100, 18));
+    // add to renderable map
+    renderables.insert(std::make_pair(1, tank2));
+    // add to collidable map
+    collidables.insert(std::make_pair(1, tank2));
 }
 
 World::~World () 
