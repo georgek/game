@@ -8,5 +8,5 @@ EXTRA_DIST = tools/shared_ptr.h
 
 AM_CXXFLAGS = -g -Wall -ansi -pedantic
 
-INCLUDES = $(CFLAGS)
+INCLUDES = $(DEPS_CFLAGS)
 LIBS = $(DEPS_LIBS)
