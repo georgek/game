@@ -9,7 +9,7 @@ AC_PROG_MAKE_SET
 AC_PROG_CXX
 
 # include libraries using pkginfo
-PKG_CHECK_MODULES(DEPS, libpng12 >= 1.2)
+PKG_CHECK_MODULES(DEPS, libpng >= 1.2 libxml++-2.6 >= 2.6)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 
@@ -25,7 +25,7 @@ AM_PATH_SDL($SDL_VERSION,
 	    AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
 )
 # Add the SDL preprocessor flags and libraries to the build process
-CFLAGS="$CFLAGS $SDL_CFLAGS"
+CFLAGS="$CFLAGS $DEPS_CFLAGS $SDL_CFLAGS"
 DEPS_LIBS="$DEPS_LIBS $SDL_LIBS"
 
 # add OpenGL (could add check for OpenGL here)

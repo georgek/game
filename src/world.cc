@@ -10,6 +10,9 @@
 #include <tr1/memory>
 #include <vector>
 
+#include <libxml++/libxml++.h>
+#include <libxml++/parsers/textreader.h>
+
 #include "SDL.h"
 #include "SDL_opengl.h"
 
