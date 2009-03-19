@@ -14,13 +14,13 @@
 
 const double PI = 4.0*std::atan(1.0);
 
-Tank::Tank(World* world, const Turret::Ptr& turret, 
+Tank::Tank(World* world, const int& layer, const Turret::Ptr& turret, 
 	   const std::string& texturename, 
 	   const int& init_x, const int& init_y,
 	   const int& engine_force, const int& mass, const int& rpm) :
     world(world),
     turret(turret),
-    texture(texturename, automatic),
+    texture(texturename, Texture::automatic),
     worldpos(init_x, init_y),
     engine_force(engine_force),
     mass(mass),
@@ -34,7 +34,8 @@ Tank::Tank(World* world, const Turret::Ptr& turret,
     mouse_x(0),
     mouse_y(0),
     turret_rpm(25),
-    curr_turret_rpm(0)
+    curr_turret_rpm(0),
+    layer(layer)
 {
     // calculate vertices
     int w = texture.getWidth();

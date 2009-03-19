@@ -13,19 +13,22 @@
 #include <string>
 #include <vector>
 
+#include <libxml++/libxml++.h>
+#include <libxml++/parsers/textreader.h>
+
 #include "SDL.h"
+#include "SDL_opengl.h"
 
 // implements renderable
 #include "renderable.h"
-// implements collidable
-#include "collidable.h"
 // implements controllable
 #include "controllable.h"
 
+#include "collidable.h"
 #include "point.h"
 #include "timer.h"
 
-class World : public Renderable, public Collidable, public Controllable
+class World : public Renderable, public Controllable
 {
 public:
     // worldfile is a file describing the world to be created
@@ -44,22 +47,26 @@ public:
 
     // implement collidable methods
     // for simple circles
-    virtual bool isCollidedR(const float& centre_x, 
-			     const float& centre_y, 
-			     const float& radius) const;
+    bool isCollidedR(const float& centre_x, 
+		     const float& centre_y, 
+		     const float& radius,
+		     const int& layer) const;
 
     // for arbitrary shapes
-    virtual bool isCollidedV(const std::vector<Point>& vertices) const;
+    bool isCollidedV(const std::vector<Point>& vertices,
+		     const int& layer) const;
 
     // implement controllable method
     virtual void update(SDL_Event& event);
 
 private:
     // the worldfile that this world is made from
-    std::ifstream worldfile;
+    xmlpp::TextReader worldfile;
     
     // current offset of world
     float xOffset, yOffset;
+    // drawing list
+    GLuint map_list;
 
     // containers for references to objects
     // multimap of renderables
@@ -74,6 +81,13 @@ private:
 
     // timer
     Timer timer;
+
+    // utility functions for parsing the worldfile
+    void parseWorldFile();
+    void parseMap();
+    void parseOrnaments();
+    void parseUser();
+    void parseEnemies();
 };
 
-#endif /* WORLD_H */
+#endif // WORLD_H

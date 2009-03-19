@@ -76,7 +76,7 @@ GLsizei Texture::getHeight() const
     return height;
 }
 
-texture_types Texture::getType() const
+Texture::texture_types Texture::getType() const
 {
     return type;
 }
@@ -131,10 +131,10 @@ void Texture::open_png()
     }
     
     // read header
-    fread(header, 1, 8, file);
+    size_t r = fread(header, 1, 8, file);
 
     // check header
-    if (png_sig_cmp(header, 0, 8)) {
+    if (r != 8 || png_sig_cmp(header, 0, 8)) {
 	// not a png
 	std::cerr << "Texture: " << filename << " is not a PNG." 
 		  << std::endl;
@@ -242,15 +242,6 @@ void Texture::open_raw()
     colour_type = 6;
 }
 
-void Texture::clean_up() 
-{
-    // destroy texel data
-    if (texels) {
-	delete[] texels;
-	texels = 0;
-    }
-}
-
 void Texture::make_opengl_tex() 
 {
     // make OpenGL texture from texels
@@ -278,4 +269,13 @@ void Texture::make_opengl_tex()
     // linear scaling, could support mipmapping in the next version
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+}
+
+void Texture::clean_up() 
+{
+    // destroy texel data
+    if (texels) {
+	delete[] texels;
+	texels = 0;
+    }
 }

@@ -21,11 +21,12 @@
 
 const double PI = 4.0*std::atan(1.0);
 
-UserTank::UserTank(World* world, const Turret::Ptr& turret, 
+UserTank::UserTank(World* world, const int& layer, const Turret::Ptr& turret, 
 		   const std::string& texturename,
 		   const int& init_x, const int& init_y, 
 		   const int& engine_force, const int& mass, const int& rpm) :
-    Tank (world, turret, texturename, init_x, init_y, engine_force, mass, rpm),
+    Tank (world, layer, turret, texturename, init_x, init_y, engine_force, 
+	  mass, rpm),
     speed (180)
 {
     
@@ -154,7 +155,10 @@ void UserTank::move()
 
     // no collision, set new world coords
     worldpos.setX(new_world_x);
-    worldpos.setY(new_world_y);    
+    worldpos.setY(new_world_y);
+    // set world offset
+    world->setXOffset(new_world_x);
+    world->setYOffset(new_world_y);
 }
 
 void UserTank::rotate() 
@@ -179,14 +183,14 @@ void UserTank::rotate_turret()
 {
     // rotate turret
     // get current resolution
-    // int vw = SDL_GetVideoInfo()->current_w;
+    int vw = SDL_GetVideoInfo()->current_w;
     int vh = SDL_GetVideoInfo()->current_h;
     
     // convert opengl coords to sdl coords
     Point screenpos (worldpos.getX() - world->getXOffset(),
     		     worldpos.getY() - world->getYOffset());
-    float sdlxOffset = screenpos.getDispX();
-    float sdlyOffset = vh - screenpos.getDispY();
+    float sdlxOffset = screenpos.getDispX() + vw/2;
+    float sdlyOffset = vh/2 - screenpos.getDispY();
     
     // angle between tank and mouse
     float dx = sdlxOffset - mouse_x;

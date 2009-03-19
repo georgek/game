@@ -3,9 +3,9 @@
 <world>
   <map width="4" height="3">
     <!-- textures -->
-    <texture id="0" filename="tex1.png" type="png" />
-    <texture id="1" filename="tex2.png" type="png" />
-    <tiles>
+    <texture id="0" filename="textures/earth2.png" type="png" />
+    <texture id="1" filename="textures/earth.png" type="png" />
+    <tiles tile_width="256" tile_height="256">
       <t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" />
       <t id="1" x="0" /><t id="0" x="1" /><t id="0" x="1" /><t id="1" x="0" />
       <t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" />

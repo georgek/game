@@ -20,7 +20,7 @@ Turret::Turret(World* world, const std::string& texturename,
     world (world),
     worldpos (init_x, init_y),
     curr_angle (0),
-    texture (texturename, automatic)
+    texture (texturename, Texture::automatic)
 {
     // calculate vertices
     int w = texture.getWidth();

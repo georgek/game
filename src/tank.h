@@ -30,7 +30,7 @@ public:
     // constructor needs pointer to world, pointer to turret, texture
     // for tank, initial world position, and engine force, rotate
     // speed etc.
-    Tank(World* world, const Turret::Ptr& turret, 
+    Tank(World* world, const int& layer, const Turret::Ptr& turret, 
 	 const std::string& texturename,
 	 const int& init_x, const int& init_y, 
 	 const int& engine_force, const int& mass, const int& rpm);
@@ -75,6 +75,8 @@ protected:
     std::vector<Point> vertices;
     // drawing list
     GLuint drawing_list;
+    // layer in world
+    int layer;
     
     // timer
     Timer timer;

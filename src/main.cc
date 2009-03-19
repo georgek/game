@@ -108,9 +108,10 @@ int main (int argc, char* argv[])
 	world = std::auto_ptr<World> (new World (aworldfile));
     }
     // catch exception from constructor
-    catch (std::runtime_error e) {
+    catch (const std::exception& e) {
 	std::cerr << "Error: " << e.what() << std::endl;
 	// exit
+	clean_up();
 	return 1;
     }
 
@@ -215,7 +216,7 @@ bool initGL(const int& width, const int& height)
     // set projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0, width, 0, height);
+    gluOrtho2D(-width/2, width/2, -height/2, height/2);
 
     // initialise modelview matrix
     glMatrixMode(GL_MODELVIEW);
