@@ -39,36 +39,34 @@ World::World (const std::string& inputworldfile) :
 	std::cout << "XML Exception: " << e.what() << std::endl;
     }
 
-    // add a turret
-    Turret::Ptr turret (new Turret(this, "textures/tankturretdirty.png", 
-				   512, 512, 18));
-    // add to renderable map
-    renderables.insert(std::make_pair(2, turret));
-    // add to collidable map
-    collidables.insert(std::make_pair(2, turret));
+    // // add a turret
+    // Turret::Ptr turret (new Turret(this, 512, 512, "turret.xml"));
+    // // add to renderable map
+    // renderables.insert(std::make_pair(2, turret));
+    // // add to collidable map
+    // collidables.insert(std::make_pair(2, turret));
     
-    // add tank
-    UserTank::Ptr tank (new UserTank(this, 1, turret, 
-				     "textures/tankbodydirty.png",
-				     512, 512, 10, 100, 18));
-    // add to renderable map
-    renderables.insert(std::make_pair(1, tank));
-    // add to collidable map
-    collidables.insert(std::make_pair(1, tank));
-    // add to controllable vector
-    controllables.push_back(tank);
+    // // add tank
+    // UserTank::Ptr tank (new UserTank(this, 1, turret, 512, 512, "tank.xml"));
+
+    // // add to renderable map
+    // renderables.insert(std::make_pair(1, tank));
+    // // add to collidable map
+    // collidables.insert(std::make_pair(1, tank));
+    // // add to controllable vector
+    // controllables.push_back(tank);
 
     // add another
     // add a turret
     Turret::Ptr turret2 (new Turret(this, "textures/tankturret4.png", 
-				   256, 256, 18));
+				   256, 256));
     // add to renderable map
     renderables.insert(std::make_pair(2, turret2));
     // add to collidable map
     collidables.insert(std::make_pair(2, turret2));
     
     // add tank
-    Tank::Ptr tank2 (new Tank(this, 1, turret, "textures/tankbody4.png",
+    Tank::Ptr tank2 (new Tank(this, 1, turret2, "textures/tankbody4.png",
 			     256, 256, 10, 100, 18));
     // add to renderable map
     renderables.insert(std::make_pair(1, tank2));
@@ -163,7 +161,48 @@ void World::parseWorldFile ()
 		parseMap();
 	    }
 	    else if (worldfile.get_name() == "usertank") {
-		// parse user tank here
+		// parse user tank
+		int bodylayer, turretlayer, init_x, init_y;
+		std::stringstream s;
+		worldfile.move_to_first_attribute();
+		std::string bodyfile = worldfile.get_value();
+		worldfile.move_to_next_attribute();
+		std::string turretfile = worldfile.get_value();
+		worldfile.move_to_next_attribute();
+		s << worldfile.get_value().raw();
+		s >> bodylayer;
+		s.str(""); s.clear();
+		worldfile.move_to_next_attribute();
+		s << worldfile.get_value().raw();
+		s >> turretlayer;
+		s.str(""); s.clear();
+		worldfile.move_to_next_attribute();
+		s << worldfile.get_value().raw();
+		s >> init_x;
+		s.str(""); s.clear();
+		worldfile.move_to_next_attribute();
+		s << worldfile.get_value().raw();
+		s >> init_y;
+		s.str(""); s.clear();
+
+		// add the turret
+		Turret::Ptr turret (new Turret(this, init_x, init_y, 
+					       turretfile));
+		// add to renderable map
+		renderables.insert(std::make_pair(turretlayer, turret));
+		// add to collidable map
+		collidables.insert(std::make_pair(turretlayer, turret));
+    
+		// add tank
+		UserTank::Ptr tank (new UserTank(this, 1, turret, 
+						 init_x, init_y, bodyfile));
+
+		// add to renderable map
+		renderables.insert(std::make_pair(1, tank));
+		// add to collidable map
+		collidables.insert(std::make_pair(1, tank));
+		// add to controllable vector
+		controllables.push_back(tank);
 	    }
 	    else if (worldfile.get_name() == "enemies") {
 		// parse enemies here

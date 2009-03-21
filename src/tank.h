@@ -34,6 +34,10 @@ public:
 	 const std::string& texturename,
 	 const int& init_x, const int& init_y, 
 	 const int& engine_force, const int& mass, const int& rpm);
+    // constructor for making tank for XML input file
+    Tank(World* world, const int& layer, const Turret::Ptr& turret,
+	 const int& init_x, const int& init_y,
+	 const std::string& inputfile);
     virtual ~Tank();
     
     // rendering functions
@@ -80,6 +84,11 @@ protected:
     
     // timer
     Timer timer;
+
+    // make drawing list
+    void makeDrawingList();
+    // for parsing input file
+    void parseInputFile(const std::string& filename);
 };
 
 #endif /* TANK_H */

@@ -14,7 +14,9 @@
       <ornament file="oaktree.xml" xpos="256" ypos="256" />
     </ornaments>
   </map>
-  <usertank bodytex="body.png" turrettex="turret.png" />
+  <usertank bodyfile="tank.xml" turretfile="turret.xml" 
+	    bodylayer="1" turretlayer="2" 
+	    xpos="512" ypos="512" />
   <enemies>
     <tank bodytex="body2.png" turrettex="turret2.png" />
   </enemies>

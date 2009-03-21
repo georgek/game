@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- reference tank input file -->
+<tank engineforce="10" mass="100" rpm="18">
+  <texture filename="textures/tankbodydirty.png" />
+  <!-- the vertices relative to the centre of the texture, the num
+       attribute is included as a convenience only -->
+  <vertices num="4">
+    <v x="35" y="75" />
+    <v x="35" y="-75" />
+    <v x="-35" y="-75" />
+    <v x="-35" y="75" />
+  </vertices>
+  <!-- the radius -->
+  <radius length="83" />
+</tank>

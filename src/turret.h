@@ -24,8 +24,9 @@ class Turret : public Renderable, public Collidable
 {
 public:
     Turret(World* world, const std::string& texture,
-	   const int& init_x, const int& init_y,
-	   const int& rpm);
+	   const int& init_x, const int& init_y);
+    Turret(World* world, const int& init_x, const int& init_y,
+	   const std::string& filename);
     virtual ~Turret();
 
     // rendering functions
@@ -58,6 +59,10 @@ protected:
     Point worldpos;
     // current angle
     float curr_angle;
+    // radius
+    float radius;
+    // offset relative to tank
+    Point offset;
     // texture
     Texture texture;
     // vertex list
@@ -67,6 +72,9 @@ protected:
 
     // timer
     Timer timer;
+
+    void makeDrawingList();
+    void parseInputFile(const std::string& filename);
 };  
 
 #endif // TURRET_H

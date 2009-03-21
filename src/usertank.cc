@@ -32,6 +32,15 @@ UserTank::UserTank(World* world, const int& layer, const Turret::Ptr& turret,
     
 }
 
+UserTank::UserTank(World* world, const int& layer, const Turret::Ptr& turret,
+	 const int& init_x, const int& init_y,
+	 const std::string& inputfile) :
+    Tank(world, layer, turret, init_x, init_y, inputfile),
+    speed(180) 
+{
+    
+}
+
 UserTank::~UserTank () 
 {
     

@@ -35,6 +35,10 @@ public:
 	 const std::string& texturename,
 	 const int& init_x, const int& init_y, 
 	 const int& engine_force, const int& mass, const int& rpm);
+    // from input file
+    UserTank(World* world, const int& layer, const Turret::Ptr& turret,
+	 const int& init_x, const int& init_y,
+	 const std::string& inputfile);
     virtual ~UserTank();
     
     // rendering functions
