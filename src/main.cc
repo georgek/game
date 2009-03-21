@@ -188,6 +188,10 @@ bool init(const int& width, const int& height)
 
     std::cout << "SDL initialised." << std::endl;
 
+    // some OpenGL settings
+    // make sure double buffering is enabled
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
     // create window
     if (SDL_SetVideoMode(width, height, 32, SDL_OPENGL) == NULL) {
 	return false;
