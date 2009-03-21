@@ -53,12 +53,26 @@ Texture::Texture(const std::string& filename, texture_types type,
 	// it was
 	make_opengl_tex();
     }
+
+    // destroy image data
+    clean_up();
+}
+
+Texture::Texture() :
+    type(automatic),
+    tex_id(0),
+    width(0),
+    height(0),
+    bit_depth(0),
+    colour_type(0),
+    texels(0) 
+{
+
 }
 
 Texture::~Texture() 
 {
-    // destroy image data
-    clean_up();
+
 }
 
 GLuint Texture::getTexId() const

@@ -37,6 +37,8 @@ public:
 	    Texture::texture_types type, 
 	    const int& width = 0, 
 	    const int& height = 0);
+    // default constructor
+    Texture();
 
     ~Texture();
     
