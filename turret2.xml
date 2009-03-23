@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<turret>
+  <texture filename="textures/tankturret4.png" />
+  <vertices num="8">
+    <v x="2" y="74" />
+    <v x="2" y="17" />
+    <v x="30" y="4" />
+    <v x="27" y="-77" />
+    <v x="-27" y="-77" />
+    <v x="-30" y="4" />
+    <v x="-2" y="17" />
+    <v x="-2" y="74" />
+  </vertices>
+  <offset x="0" y="28" />
+  <radius length="82" />
+</turret>

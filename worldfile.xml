@@ -11,7 +11,9 @@
       <t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" />
     </tiles>
     <ornaments>
-      <ornament file="oaktree.xml" xpos="256" ypos="256" />
+      <tank bodyfile="tank2.xml" turretfile="turret2.xml" 
+	    bodylayer="1" turretlayer="2" 
+	    xpos="128" ypos="128" />
     </ornaments>
   </map>
   <usertank bodyfile="tank.xml" turretfile="turret.xml" 
