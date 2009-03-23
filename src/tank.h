@@ -32,11 +32,11 @@ public:
     // speed etc.
     Tank(World* world, const int& layer, const Turret::Ptr& turret, 
 	 const std::string& texturename,
-	 const int& init_x, const int& init_y, 
+	 const Point& init_pos,
 	 const int& engine_force, const int& mass, const int& rpm);
     // constructor for making tank for XML input file
     Tank(World* world, const int& layer, const Turret::Ptr& turret,
-	 const int& init_x, const int& init_y,
+	 const Point& init_pos,
 	 const std::string& inputfile);
     virtual ~Tank();
     
@@ -44,8 +44,7 @@ public:
     virtual void draw();
 
     // colliding functions
-    virtual bool isCollidedR(const float& centre_x,
-			     const float& centre_y,
+    virtual bool isCollidedR(const Point& centre,
 			     const float& radius) const;
     virtual bool isCollidedV(const std::vector<Point>& vertices) const;
 
@@ -64,9 +63,9 @@ protected:
     // radius
     float radius;
     // constant physical properties
-    int engine_force, mass, rpm;
+    int accn, dccn, top_speed, rpm;
     // current physical properties
-    float velocity, friction, curr_rpm;
+    float curr_velocity, target_velocity, curr_rpm;
     // current heading
     float heading;
     // velocity components

@@ -36,27 +36,27 @@ public:
     virtual ~World();
 
     // set world offset (e.g. to be done by main character)
-    void	setXOffset(const float& x);
-    void	setYOffset(const float& y);
+    void	setOffset(const Point& new_offset);
     // get world offset (e.g. for stuff that moves with the world)
-    float	getXOffset() const;
-    float	getYOffset() const;
+    Point	getOffset() const;
 
     // implement renderable method
     virtual void draw();
 
     // implement collidable methods
     // for simple circles
-    bool isCollidedR(const float& centre_x, 
-		     const float& centre_y, 
+    bool isCollidedR(const Point& centre,
 		     const float& radius,
-		     const int& layer) const;
+		     const int& layer,
+		     const Collidable* caller) const;
 
     // for arbitrary shapes
     bool isCollidedV(const std::vector<Point>& vertices,
-		     const int& layer) const;
+		     const int& layer,
+		     const Collidable* caller) const;
 
-    // implement controllable method
+    // implement controllable methods
+    virtual void update();
     virtual void update(SDL_Event& event);
 
 private:
@@ -64,7 +64,8 @@ private:
     xmlpp::TextReader worldfile;
     
     // current offset of world
-    float xOffset, yOffset;
+    Point offset;
+    
     // drawing list
     GLuint map_list;
 

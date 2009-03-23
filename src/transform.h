@@ -13,6 +13,8 @@
 
 #include <functional>
 
+#include "point.h"
+
 class Transform : public std::unary_function<Point, Point>
 {
 public:

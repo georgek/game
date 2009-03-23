@@ -32,21 +32,20 @@ public:
     // for tank, initial world position, and engine force, rotate
     // speed etc.
     UserTank(World* world, const int& layer, const Turret::Ptr& turret, 
-	 const std::string& texturename,
-	 const int& init_x, const int& init_y, 
-	 const int& engine_force, const int& mass, const int& rpm);
+	     const std::string& texturename,
+	     const Point& init_pos,
+	     const int& engine_force, const int& mass, const int& rpm);
     // from input file
     UserTank(World* world, const int& layer, const Turret::Ptr& turret,
-	 const int& init_x, const int& init_y,
-	 const std::string& inputfile);
+	     const Point& init_pos,
+	     const std::string& inputfile);
     virtual ~UserTank();
     
     // rendering functions
     virtual void draw();
 
     // colliding functions
-    virtual bool isCollidedR(const float& centre_x,
-			     const float& centre_y,
+    virtual bool isCollidedR(const Point& centre,
 			     const float& radius) const;
     virtual bool isCollidedV(const std::vector<Point>& vertices) const;
 
@@ -61,9 +60,6 @@ private:
     void move();
     void rotate();
     void rotate_turret();
-
-    // temp
-    float speed;
 };
 
 #endif /* USERTANK_H */

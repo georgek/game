@@ -5,23 +5,26 @@
 
 // implements turret class
 
+#include <algorithm>
 #include <iostream>
 
 #include "SDL.h"
 #include "SDL_opengl.h"
 
+#include "pnpoly.h"
 #include "texture.h"
+#include "transform.h"
 #include "turret.h"
 #include "world.h"
 
 Turret::Turret(World* world, const std::string& texturename,
-	       const int& init_x, const int& init_y) :
+	       const Point& init_pos, const int& layer) :
     world (world),
-    worldpos (init_x, init_y),
+    worldpos (init_pos),
     curr_angle (0),
     radius(0),
-    offset (0,0),
-    texture (texturename, Texture::automatic)
+    texture (texturename, Texture::automatic),
+    layer(layer)
 {
     // calculate vertices
     int w = texture.getWidth();
@@ -34,11 +37,12 @@ Turret::Turret(World* world, const std::string& texturename,
     makeDrawingList();
 }
 
-Turret::Turret(World* world, const int& init_x, const int& init_y,
-	       const std::string& filename) :
+Turret::Turret(World* world, const Point& init_pos,
+	       const std::string& filename, const int& layer) :
     world(world),
-    worldpos(init_x, init_y),
-    curr_angle(0)
+    worldpos(init_pos),
+    curr_angle(0),
+    layer(layer)
 {
     // read input file
     try {
@@ -60,8 +64,7 @@ Turret::~Turret ()
 void Turret::draw() 
 {
     // find screen position
-    Point screenpos (worldpos.getX() - world->getXOffset(),
-		     worldpos.getY() - world->getYOffset());
+    Point screenpos =  worldpos - world->getOffset();
     // (re)start timer
     timer.start();
     
@@ -82,25 +85,45 @@ void Turret::draw()
     glPopMatrix();
 }
 
-bool Turret::isCollidedR(const float& centre_x, const float& centre_y,
+bool Turret::isCollidedR(const Point& centre,
 			 const float& radius) const 
 {
+    // distance between points
+    if ((worldpos + real_offset) % centre < (this->radius + radius)) {
+	// collided
+	return true;
+    }
     return false;
 }
 
 bool Turret::isCollidedV(const std::vector<Point>& vertices) const 
 {
+    // work out current vertices
+    std::vector<Point> curr_vertices;
+    // transform the vertices using the transform functor
+    std::transform(this->vertices.begin(), this->vertices.end(),
+		   std::back_inserter(curr_vertices),
+		   Transform(worldpos+real_offset, curr_angle));
+
+    // check that none of the other vertices are in this polygon
+    std::vector<Point>::const_iterator pos;
+    for (pos = vertices.begin(); pos < vertices.end(); ++pos) {
+	if (wrf::pnpoly(curr_vertices, *pos)) {
+	    return true;
+	}
+    }
+    // now check that none of these vertices are in the other polygon
+    for (pos = curr_vertices.begin(); pos < curr_vertices.end(); ++pos) {
+	if (wrf::pnpoly(vertices, *pos)) {
+	    return true;
+	}
+    }
     return false;
 }
 
-void Turret::setWorldX (const float& x) 
+void Turret::setWorldPos (const Point& pos) 
 {
-    worldpos.setX(x);
-}
-
-void Turret::setWorldY (const float& y) 
-{
-    worldpos.setY(y);
+    worldpos = pos;
 }
 
 float Turret::getTurretAngle () const
@@ -113,6 +136,9 @@ void Turret::setTurretAngle (const float& theta)
     curr_angle = theta;
     if (curr_angle > 360) curr_angle = curr_angle - 360;
     if (curr_angle < 0) curr_angle = 360 + curr_angle;
+    // transform offset
+    Transform offset_trans(Point(0,0), curr_angle);
+    real_offset = offset_trans(offset);
 }
 
 void Turret::incTurretAngle (const float& theta) 
@@ -120,6 +146,32 @@ void Turret::incTurretAngle (const float& theta)
     curr_angle += theta;
     if (curr_angle > 360) curr_angle = curr_angle - 360;
     if (curr_angle < 0) curr_angle = 360 + curr_angle;
+    // transform offset
+    Transform offset_trans(Point(0,0), curr_angle);
+    real_offset = offset_trans(offset);
+}
+
+bool Turret::isCollided (const Point& new_worldpos, 
+			 const float& angle_inc) const
+{
+
+    // check for collisions, simple radius check first
+    if (world->isCollidedR(new_worldpos+real_offset, radius, layer, this)) {
+	// might be a collision, now check with vertices
+	// work out new vertices
+	std::vector<Point> new_vertices;
+	// transform the vertices using the transform functor
+	std::transform(vertices.begin(), vertices.end(), // source
+		       std::back_inserter(new_vertices), // destination
+		       Transform(new_worldpos+real_offset, 
+				 curr_angle+angle_inc));
+	
+	if (world->isCollidedV(new_vertices, layer, this)) {
+	    // it has collided
+	    return true;
+	}
+    }
+    return false;
 }
 
 void Turret::makeDrawingList() 
@@ -227,6 +279,9 @@ void Turret::parseInputFile(const std::string& filename)
 		s >> y;
 		s.str(""); s.clear();
 		offset = Point(x,y);
+		// transform offset
+		Transform offset_trans(Point(0,0), curr_angle);
+		real_offset = offset_trans(offset);
 	    }
 	    else if (inputfile.get_name() == "radius") {
 		// store radius

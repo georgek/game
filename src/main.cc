@@ -3,9 +3,11 @@
  * UEA registration number: 3316173
  */
 
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <vector>
 
 #include <cstdlib>
 #include <unistd.h>
@@ -13,8 +15,10 @@
 #include "SDL.h"
 #include "SDL_opengl.h"
 
+#include "pnpoly.h"
 #include "point.h"
 #include "timer.h"
+#include "transform.h"
 #include "world.h"
 
 // turns the fps cap on or off
@@ -132,9 +136,12 @@ int main (int argc, char* argv[])
 	// start fpscap timer
 	fpsCap.start();
 	
-	// check for events to handle
+	// process any events in queue
 	while (SDL_PollEvent(&event)) {
-	    if (event.type == SDL_QUIT) {
+	    if (event.type == SDL_QUIT
+		|| (event.type == SDL_KEYUP
+		    && event.key.keysym.sym == SDLK_ESCAPE)
+		) {
 		quit = true;
 	    }
 	    else {

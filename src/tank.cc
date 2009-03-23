@@ -5,6 +5,7 @@
 
 // implementation of Tank class
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <string>
@@ -12,24 +13,26 @@
 #include <libxml++/libxml++.h>
 #include <libxml++/parsers/textreader.h>
 
+#include "pnpoly.h"
 #include "tank.h"
+#include "transform.h"
 #include "world.h"
 
 const double PI = 4.0*std::atan(1.0);
 
 Tank::Tank(World* world, const int& layer, const Turret::Ptr& turret, 
 	   const std::string& texturename, 
-	   const int& init_x, const int& init_y,
+	   const Point& init_pos,
 	   const int& engine_force, const int& mass, const int& rpm) :
     world(world),
     turret(turret),
     texture(texturename, Texture::automatic),
-    worldpos(init_x, init_y),
-    engine_force(engine_force),
-    mass(mass),
+    worldpos(init_pos),
+    radius(83),
+    top_speed(180),
     rpm(rpm),
-    velocity(0),
-    friction(0),
+    curr_velocity(0),
+    target_velocity(0),
     curr_rpm(0),
     heading(0),
     xf(0),
@@ -52,13 +55,13 @@ Tank::Tank(World* world, const int& layer, const Turret::Ptr& turret,
 }
 
 Tank::Tank(World* world, const int& layer, const Turret::Ptr& turret,
-	   const int& init_x, const int& init_y,
+	   const Point& init_pos,
 	   const std::string& inputfile) :
     world(world),
     turret(turret),
-    worldpos(init_x, init_y),
-    velocity(0),
-    friction(0),
+    worldpos(init_pos),
+    curr_velocity(0),
+    target_velocity(0),
     curr_rpm(0),
     heading(0),
     xf(0),
@@ -89,8 +92,8 @@ Tank::~Tank()
 void Tank::draw() 
 {
     // find screen position
-    Point screenpos (worldpos.getX() - world->getXOffset(),
-    		     worldpos.getY() - world->getYOffset());
+    Point screenpos =  worldpos - world->getOffset();
+
     // (re)start timer
     timer.start();
 
@@ -107,15 +110,39 @@ void Tank::draw()
     glPopMatrix();
 }
 
-bool Tank::isCollidedR(const float& centre_x,
-		       const float& centre_y,
+bool Tank::isCollidedR(const Point& centre,
 		       const float& radius) const 
 {
+    // distance between points
+    if (worldpos % centre < (this->radius + radius)) {
+	// collided
+	return true;
+    }
     return false;
 }
 
 bool Tank::isCollidedV(const std::vector<Point>& vertices) const 
 {
+    // work out current vertices
+    std::vector<Point> curr_vertices;
+    // transform the vertices using the transform functor
+    std::transform(this->vertices.begin(), this->vertices.end(),
+		   std::back_inserter(curr_vertices),
+		   Transform(worldpos, heading));
+
+    // check that none of the other vertices are in this polygon
+    std::vector<Point>::const_iterator pos;
+    for (pos = vertices.begin(); pos < vertices.end(); ++pos) {
+	if (wrf::pnpoly(curr_vertices, *pos)) {
+	    return true;
+	}
+    }
+    // now check that none of these vertices are in the other polygon
+    for (pos = curr_vertices.begin(); pos < curr_vertices.end(); ++pos) {
+	if (wrf::pnpoly(vertices, *pos)) {
+	    return true;
+	}
+    }
     return false;
 }
 
@@ -167,11 +194,15 @@ void Tank::parseInputFile(const std::string& filename)
 		// get attributes
 		inputfile.move_to_first_attribute();
 		s << inputfile.get_value();
-		s >> engine_force;
+		s >> accn;
 		s.str(""); s.clear();
 		inputfile.move_to_next_attribute();
 		s << inputfile.get_value();
-		s >> mass;
+		s >> dccn;
+		s.str(""); s.clear();
+		inputfile.move_to_next_attribute();
+		s << inputfile.get_value();
+		s >> top_speed;
 		s.str(""); s.clear();
 		inputfile.move_to_next_attribute();
 		s << inputfile.get_value();

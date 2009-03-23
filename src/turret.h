@@ -24,30 +24,30 @@ class Turret : public Renderable, public Collidable
 {
 public:
     Turret(World* world, const std::string& texture,
-	   const int& init_x, const int& init_y);
-    Turret(World* world, const int& init_x, const int& init_y,
-	   const std::string& filename);
+	   const Point& init_pos, const int& layer);
+    Turret(World* world, const Point& init_pos,
+	   const std::string& filename, const int& layer);
     virtual ~Turret();
 
     // rendering functions
     virtual void draw();
 
     // colliding functions
-    virtual bool isCollidedR(const float& centre_x,
-			     const float& centre_y,
+    virtual bool isCollidedR(const Point& centre,
 			     const float& radius) const;
     virtual bool isCollidedV(const std::vector<Point>& vertices) const;
 
     // sets world coords
-    void setWorldX (const float& x);
-    void setWorldY (const float& y);
-
+    void setWorldPos (const Point& pos);
 
     // gets turret angle
     float getTurretAngle () const;
     // sets turret angle
     void setTurretAngle (const float& theta);
+    // increments turret angle
     void incTurretAngle (const float& theta);
+    // checks whether the turret will collide in a new position
+    bool isCollided (const Point& new_worldpos, const float& angle_inc) const;
 
     // convenience typedef
     typedef std::tr1::shared_ptr<Turret> Ptr;
@@ -61,14 +61,18 @@ protected:
     float curr_angle;
     // radius
     float radius;
-    // offset relative to tank
+    // offset relative to tank (for OpenGL)
     Point offset;
+    // corrected absolute offset (for collision detection)
+    Point real_offset;
     // texture
     Texture texture;
     // vertex list
     std::vector<Point> vertices;
     // drawing list
     GLuint drawing_list;
+    // layer
+    int layer;
 
     // timer
     Timer timer;

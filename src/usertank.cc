@@ -5,6 +5,7 @@
 
 // implementation of user tank class
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <string>
@@ -15,6 +16,7 @@
 #include "SDL_opengl.h"
 
 #include "point.h"
+#include "transform.h"
 #include "turret.h"
 #include "usertank.h"
 #include "world.h"
@@ -23,22 +25,22 @@ const double PI = 4.0*std::atan(1.0);
 
 UserTank::UserTank(World* world, const int& layer, const Turret::Ptr& turret, 
 		   const std::string& texturename,
-		   const int& init_x, const int& init_y, 
+		   const Point& init_pos,
 		   const int& engine_force, const int& mass, const int& rpm) :
-    Tank (world, layer, turret, texturename, init_x, init_y, engine_force, 
-	  mass, rpm),
-    speed (180)
+    Tank (world, layer, turret, texturename, init_pos, engine_force, 
+	  mass, rpm)
 {
-    
+    // set world offset
+    world->setOffset(init_pos);
 }
 
 UserTank::UserTank(World* world, const int& layer, const Turret::Ptr& turret,
-	 const int& init_x, const int& init_y,
-	 const std::string& inputfile) :
-    Tank(world, layer, turret, init_x, init_y, inputfile),
-    speed(180) 
+		   const Point& init_pos,
+		   const std::string& inputfile) :
+    Tank(world, layer, turret, init_pos, inputfile)
 {
-    
+    // set world offset
+    world->setOffset(init_pos);
 }
 
 UserTank::~UserTank () 
@@ -48,30 +50,18 @@ UserTank::~UserTank ()
 
 void UserTank::draw () 
 {
-    // rotate tank
-    rotate();
-    // move tank
-    move();
-    // rotate turret
-    rotate_turret();
-
-    // set turret position
-    turret->setWorldX (worldpos.getX());
-    turret->setWorldY (worldpos.getY());
-
     Tank::draw();
 }
 
-bool UserTank::isCollidedR(const float& centre_x,
-			   const float& centre_y,
+bool UserTank::isCollidedR(const Point& centre,
 			   const float& radius) const 
 {
-    return false;
+    return Tank::isCollidedR(centre, radius);
 }
 
 bool UserTank::isCollidedV(const std::vector<Point>& vertices) const 
 {
-    return false;
+    return Tank::isCollidedV(vertices);
 }
 
 void UserTank::update ()
@@ -87,7 +77,7 @@ void UserTank::update ()
     turret->setWorldPos (worldpos);
 }
 
-void UserTank::update(SDL_Event& event) 
+void UserTank::update (SDL_Event& event) 
 {
     // respond to WASD keys
     // W and S keys make it accelerate forwards and backwards
@@ -97,20 +87,22 @@ void UserTank::update(SDL_Event& event)
     if (event.type == SDL_KEYDOWN) {
 	switch (event.key.keysym.sym) {
 	case SDLK_w:
-	    velocity += speed;
+	    target_velocity += top_speed;
 	    break;
 	case SDLK_s:
-	    velocity += -speed;
+	    target_velocity += -top_speed;
 	    break;
 	case SDLK_d:
 	    curr_rpm += -rpm;
-	    velocity = velocity/2;
-	    speed = speed/2;
+	    curr_velocity = curr_velocity/2;
+	    target_velocity = target_velocity/2;
+	    top_speed = top_speed/2;
 	    break;
 	case SDLK_a:
 	    curr_rpm += rpm;
-	    velocity = velocity/2;
-	    speed = speed/2;
+	    curr_velocity = curr_velocity/2;
+	    target_velocity = target_velocity/2;
+	    top_speed = top_speed/2;
 	    break;
 	default:
 	    break;
@@ -120,20 +112,22 @@ void UserTank::update(SDL_Event& event)
     if (event.type == SDL_KEYUP) {
 	switch (event.key.keysym.sym) {
 	case SDLK_w:
-	    velocity -= speed;
+	    target_velocity -= top_speed;
 	    break;
 	case SDLK_s:
-	    velocity -= -speed;
+	    target_velocity -= -top_speed;
 	    break;
 	case SDLK_d:
 	    curr_rpm -= -rpm;
-	    velocity = velocity*2;
-	    speed = speed*2;
+	    curr_velocity = curr_velocity*2;
+	    target_velocity = target_velocity*2;
+	    top_speed = top_speed*2;
 	    break;
 	case SDLK_a:
 	    curr_rpm -= rpm;
-	    velocity = velocity*2;
-	    speed = speed*2;
+	    curr_velocity = curr_velocity*2;
+	    target_velocity = target_velocity*2;
+	    top_speed = top_speed*2;
 	    break;
 	default:
 	    break;
@@ -168,31 +162,97 @@ void UserTank::update(SDL_Event& event)
 
 void UserTank::move() 
 {
-    // move according to current velocities
-    // velocities are in pixels/second
-    
     float ticks = timer.get_ticks();
-    float new_world_x = worldpos.getX() + velocity*xf*ticks/1000.0;
-    float new_world_y = worldpos.getY() + velocity*yf*ticks/1000.0;
+    // apply acceleration
+    if (curr_velocity < target_velocity && target_velocity > 0) {
+	// accelerate forwards
+	curr_velocity += accn*ticks/1000.0;
+	if (curr_velocity > target_velocity) curr_velocity = target_velocity;
+    }
+    else if (curr_velocity > target_velocity && target_velocity < 0) {
+	// accelerate backwards
+	curr_velocity -= accn*ticks/1000.0;
+	if (curr_velocity < target_velocity) curr_velocity = target_velocity;
+    }
+    else if (curr_velocity > target_velocity && target_velocity == 0) {
+	// deccelerate
+	curr_velocity -= dccn*ticks/1000.0;
+	if (curr_velocity < target_velocity) curr_velocity = target_velocity;
+    }
+    else if (curr_velocity < target_velocity && target_velocity == 0) {
+	// deccelerate
+	curr_velocity += dccn*ticks/1000.0;
+	if (curr_velocity > target_velocity) curr_velocity = target_velocity;
+    }
+
+    // move according to current velocities
+    Point new_worldpos;
+    new_worldpos.setX(worldpos.getX() + curr_velocity*xf*ticks/1000.0);
+    new_worldpos.setY(worldpos.getY() + curr_velocity*yf*ticks/1000.0);
+
+    if (new_worldpos == worldpos) {
+	// nothing do so return
+	return;
+    }
+
+    // check for collisions, first check turret
+    if (turret->isCollided(new_worldpos, 0)) {
+	return;
+    }
+    // now do a simple radius check with the tank
+    if (world->isCollidedR(new_worldpos, radius, layer, this)) {
+	// might be a collision, now check with vertices
+	// work out new vertices
+	std::vector<Point> new_vertices;
+	// transform the vertices using the transform functor
+	std::transform(vertices.begin(), vertices.end(), // source
+		       std::back_inserter(new_vertices), // destination
+		       Transform(new_worldpos, heading));
+	
+	if (world->isCollidedV(new_vertices, layer, this)) {
+	    // it has collided
+	    curr_velocity = 0;
+	    return;
+	}
+    }
 
     // no collision, set new world coords
-    worldpos.setX(new_world_x);
-    worldpos.setY(new_world_y);
+    worldpos = new_worldpos;
     // set world offset
-    world->setXOffset(new_world_x);
-    world->setYOffset(new_world_y);
+    world->setOffset(worldpos);
 }
 
 void UserTank::rotate() 
 {
     // rotate tank according to current rpm
-    float new_rotation = heading + 
+    float new_heading = heading + 
 	(curr_rpm*timer.get_ticks())/(60000.0f/360.0f);
-    if (new_rotation > 360) new_rotation = new_rotation - 360;
-    if (new_rotation < 0) new_rotation = 360 + new_rotation;
+    if (new_heading > 360) new_heading = new_heading - 360;
+    if (new_heading < 0) new_heading = 360 + new_heading;
+
+    if (new_heading == heading) {
+	// nothing to do
+	return;
+    }
+
+    // check for collisions, simple radius check first
+    if (world->isCollidedR(worldpos, radius, layer, this)) {
+	// might be a collision, now check with vertices
+	// work out new vertices
+	std::vector<Point> new_vertices;
+	// transform the vertices using the transform functor
+	std::transform(vertices.begin(), vertices.end(), // source
+		       std::back_inserter(new_vertices), // destination
+		       Transform(worldpos, new_heading));
+	
+	if (world->isCollidedV(new_vertices, layer, this)) {
+	    // it has collided
+	    return;
+	}
+    }
 
     // no collision, set new rotation
-    heading = new_rotation;
+    heading = new_heading;
 
     if (curr_rpm) {
 	// calculate new x and y factors for movement
@@ -209,8 +269,7 @@ void UserTank::rotate_turret()
     int vh = SDL_GetVideoInfo()->current_h;
     
     // convert opengl coords to sdl coords
-    Point screenpos (worldpos.getX() - world->getXOffset(),
-    		     worldpos.getY() - world->getYOffset());
+    Point screenpos = worldpos - world->getOffset();
     float sdlxOffset = screenpos.getDispX() + vw/2;
     float sdlyOffset = vh/2 - screenpos.getDispY();
     
@@ -235,6 +294,11 @@ void UserTank::rotate_turret()
     // convert to degrees
     theta = theta*180/PI;
 
+    if (theta == turret->getTurretAngle()) {
+	// nothing to do
+	return;
+    }
+
     // find out how far the turret can move in one tick
     float tick_angle = (turret_rpm*timer.get_ticks())/(60000.0f/360.0f);
 
@@ -244,7 +308,13 @@ void UserTank::rotate_turret()
     // now set turret rpm
     if (std::fabs(diff) < tick_angle) {
 	curr_turret_rpm = 0;
-	turret->setTurretAngle(theta);
+	// check for collisions
+	if (!turret->isCollided(worldpos, theta-turret->getTurretAngle())) {
+	    // not collided, set angle exactly to mouse
+	    turret->setTurretAngle(theta);
+	}
+	// return because there is nothing else to do
+	return;
     }
     else if (diff >= -180 && diff < 180) {
 	curr_turret_rpm = (diff > 0 ? turret_rpm : -turret_rpm) + curr_rpm;
@@ -253,9 +323,14 @@ void UserTank::rotate_turret()
 	curr_turret_rpm = (diff > 0 ? -turret_rpm : turret_rpm) + curr_rpm;
     }
     
-    // adjust turret rotation based on current rpm
-    turret->incTurretAngle(
-	(curr_turret_rpm*timer.get_ticks())
-	/(60000.0f/360.0f)
-	);
+    // find change in angle based on current rpm
+    float dtheta = (curr_turret_rpm*timer.get_ticks())/(60000.0f/360.0f);
+
+    // check for collisions
+    if (turret->isCollided(worldpos, dtheta)) {
+	// collided
+	return;
+    }
+    // not collided, set new turret angle
+    turret->incTurretAngle(dtheta);
 }

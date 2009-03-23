@@ -24,6 +24,17 @@ public:
 
     void setX (const float& x);
     void setY (const float& y);
+
+    // operators
+    bool operator== (const Point& other) const;
+    bool operator!= (const Point& other) const;
+    Point& operator+= (const Point& rhs);
+    Point& operator-= (const Point& rhs);
+    const Point operator+ (const Point& other) const;
+    const Point operator- (const Point& other) const;
+    // this operator has special behaviour, it calculates the
+    // euclidean distance between the points
+    float operator% (const Point& other) const;
     
     // reference resolution
     static int refw;

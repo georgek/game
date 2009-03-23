@@ -18,8 +18,7 @@
 class Collidable 
 {
 public:
-    virtual bool isCollidedR(const float& centre_x, 
-			     const float& centre_y, 
+    virtual bool isCollidedR(const Point& centre,
 			     const float& radius) const = 0;
 
     virtual bool isCollidedV(const std::vector<Point>& vertices) const = 0;

@@ -27,9 +27,7 @@
 #include "world.h"
 
 World::World (const std::string& inputworldfile) :
-    worldfile (inputworldfile.c_str()),
-    xOffset (0),
-    yOffset (0) 
+    worldfile (inputworldfile.c_str())
 {
     // now parse the worldfile and build the world
     try {
@@ -45,24 +43,14 @@ World::~World ()
     // destruct stuff
 }
 
-void World::setXOffset(const float& x) 
+void World::setOffset(const Point& new_offset) 
 {
-    xOffset = x;
+    offset = new_offset;
 }
 
-void World::setYOffset(const float& y) 
+Point World::getOffset() const 
 {
-    yOffset = y;
-}
-
-float World::getXOffset() const 
-{
-    return xOffset;
-}
-
-float World::getYOffset() const 
-{
-    return yOffset;
+    return offset;
 }
 
 void World::draw()
@@ -72,8 +60,7 @@ void World::draw()
 
     // offset world
     glPushMatrix();
-    Point offset (-xOffset, -yOffset);
-    glTranslatef(offset.getDispX(), offset.getDispY(), 0);
+    glTranslatef(-offset.getDispX(), -offset.getDispY(), 0);
 
     // draw map
     glCallList(map_list);
@@ -90,20 +77,63 @@ void World::draw()
     SDL_GL_SwapBuffers();
 }
 
-bool World::isCollidedR (const float& centre_x,
-			 const float& cetnre_y,
+bool World::isCollidedR (const Point& centre,
 			 const float& radius,
-			 const int& layer) const 
+			 const int& layer,
+			 const Collidable* caller) const 
 {
-    // do collision detection
+    // check collision with world, hack for now
+    if ((centre.getX() - radius) < 0 
+	|| (centre.getY() - radius) < 0
+	|| (centre.getX() + radius) > 4*256
+	|| (centre.getY() + radius) > 3*256
+	) {
+	return true;
+    }
+
+    // check all collidables in layer
+    CollMap::const_iterator pos;
+    for (pos = collidables.lower_bound(layer);
+	 pos != collidables.upper_bound(layer); ++pos) {
+	if (pos->second.get() != caller
+	    && pos->second->isCollidedR(centre, radius)) {
+	    return true;
+	}
+    }
     return false;
 }
 
 bool World::isCollidedV (const std::vector<Point>& vertices,
-			 const int& layer) const 
+			 const int& layer, 
+			 const Collidable* caller) const 
 {
-    // do collision detection
-    return false;
+    // check collision with map, hack for now
+    // check if any vertices are outside map
+    std::vector<Point>::const_iterator i;
+    for (i = vertices.begin(); i != vertices.end(); ++i) {
+	if (i->getX() < 0 || i->getX() > 4*256) return true;
+	if (i->getY() < 0 || i->getY() > 3*256) return true;
+    }
+
+    // check all collidables in layer
+    CollMap::const_iterator pos;
+    for (pos = collidables.lower_bound(layer);
+	 pos != collidables.upper_bound(layer); ++pos) {
+	if (pos->second.get() != caller
+	    && pos->second->isCollidedV(vertices)) {
+	    return true;
+	}
+    }
+    return false;    
+}
+
+void World::update ()
+{
+    // update all controllables
+    ConVect::iterator pos;
+    for (pos = controllables.begin(); pos != controllables.end(); ++pos) {
+	(*pos)->update();
+    }
 }
 
 void World::update (SDL_Event& event) 
@@ -152,21 +182,22 @@ void World::parseWorldFile ()
 		s.str(""); s.clear();
 
 		// add the turret
-		Turret::Ptr turret (new Turret(this, init_x, init_y, 
-					       turretfile));
+		Turret::Ptr turret (new Turret(this, Point(init_x, init_y), 
+					       turretfile, turretlayer));
 		// add to renderable map
 		renderables.insert(std::make_pair(turretlayer, turret));
 		// add to collidable map
 		collidables.insert(std::make_pair(turretlayer, turret));
     
 		// add tank
-		UserTank::Ptr tank (new UserTank(this, 1, turret, 
-						 init_x, init_y, bodyfile));
+		UserTank::Ptr tank (new UserTank(this, bodylayer, turret, 
+						 Point(init_x, init_y), 
+						 bodyfile));
 
 		// add to renderable map
-		renderables.insert(std::make_pair(1, tank));
+		renderables.insert(std::make_pair(bodylayer, tank));
 		// add to collidable map
-		collidables.insert(std::make_pair(1, tank));
+		collidables.insert(std::make_pair(bodylayer, tank));
 		// add to controllable vector
 		controllables.push_back(tank);
 	    }
