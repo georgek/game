@@ -74,6 +74,19 @@ bool UserTank::isCollidedV(const std::vector<Point>& vertices) const
     return false;
 }
 
+void UserTank::update ()
+{
+    // rotate tank
+    rotate();
+    // move tank
+    move();
+    // rotate turret
+    rotate_turret();
+
+    // set turret position
+    turret->setWorldPos (worldpos);
+}
+
 void UserTank::update(SDL_Event& event) 
 {
     // respond to WASD keys

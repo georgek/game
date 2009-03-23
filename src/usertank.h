@@ -51,6 +51,7 @@ public:
     virtual bool isCollidedV(const std::vector<Point>& vertices) const;
 
     // control functions
+    virtual void update();
     virtual void update(SDL_Event& event);
 
     // convenience typedef

@@ -142,6 +142,8 @@ int main (int argc, char* argv[])
 		world->update(event);
 	    }
 	}
+	// update objects
+	world->update();
 
 	// draw world
 	world->draw();
