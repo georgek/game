@@ -1,9 +1,10 @@
 bin_PROGRAMS = game
 
-game_SOURCES = main.cc collidable.h controllable.h point.h point.cc \
-	renderable.h tank.h tank.cc texture.h texture.cc timer.h timer.cc \
-	turret.h turret.cc usertank.h usertank.cc world.h world.cc pnpoly.cc \
-	transform.cc
+game_SOURCES = main.cc collidable.h controllable.h point.h point.cc	\
+	renderable.h tank.h tank.cc texture.h texture.cc timer.h	\
+	timer.cc turret.h turret.cc usertank.h usertank.cc world.h	\
+	world.cc pnpoly.h pnpoly.cc transform.h transform.cc		\
+	friendlytank.h friendlytank.cc
 
 EXTRA_DIST = tools/shared_ptr.h
 
