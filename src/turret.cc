@@ -203,25 +203,6 @@ void Turret::makeDrawingList()
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
-
-/*  this stuff draws the collision zone
-    glBegin(GL_QUADS);
-    glColor4f(1,0,0,1);
-    glVertex3f(vertices[0].getDispX(),vertices[0].getDispY(),0);
-    glVertex3f(vertices[1].getDispX(),vertices[1].getDispY(),0);
-    glVertex3f(vertices[6].getDispX(),vertices[6].getDispY(),0);
-    glVertex3f(vertices[7].getDispX(),vertices[7].getDispY(),0);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor4f(1,0,0,1);
-    glVertex3f(vertices[1].getDispX(),vertices[1].getDispY(),0);
-    glVertex3f(vertices[2].getDispX(),vertices[2].getDispY(),0);
-    glVertex3f(vertices[3].getDispX(),vertices[3].getDispY(),0);
-    glVertex3f(vertices[4].getDispX(),vertices[4].getDispY(),0);
-    glVertex3f(vertices[5].getDispX(),vertices[5].getDispY(),0);
-    glVertex3f(vertices[6].getDispX(),vertices[6].getDispY(),0);
-    glEnd();*/
     
     glEndList();
 }
