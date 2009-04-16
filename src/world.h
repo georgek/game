@@ -45,15 +45,20 @@ public:
 
     // implement collidable methods
     // for simple circles
-    bool isCollidedR(const Point& centre,
-		     const float& radius,
-		     const int& layer,
-		     const Collidable* caller) const;
+    // bool isCollidedR(const Point& centre,
+    //     	     const float& radius,
+    //     	     const int& layer,
+    //     	     const Collidable* caller) const;
 
-    // for arbitrary shapes
-    bool isCollidedV(const std::vector<Point>& vertices,
-		     const int& layer,
-		     const Collidable* caller) const;
+    // // for arbitrary shapes
+    // bool isCollidedV(const std::vector<Point>& vertices,
+    //     	     const int& layer,
+    //     	     const Collidable* caller) const;
+
+    // collision detection
+    bool isCollided(const Point& centre, const float& radius,
+                    const std::vector<Point>& vertices,
+                    const int& layer, const Collidable* caller) const;
 
     // implement controllable methods
     virtual void update();

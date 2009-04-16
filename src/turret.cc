@@ -154,22 +154,19 @@ void Turret::incTurretAngle (const float& theta)
 bool Turret::isCollided (const Point& new_worldpos, 
 			 const float& angle_inc) const
 {
+    // work out new vertices
+    std::vector<Point> new_vertices;
+    // transform the vertices using the transform functor
+    std::transform(vertices.begin(), vertices.end(), // source
+                   std::back_inserter(new_vertices), // destination
+                   Transform(new_worldpos+real_offset, 
+                             curr_angle+angle_inc));
 
-    // check for collisions, simple radius check first
-    if (world->isCollidedR(new_worldpos+real_offset, radius, layer, this)) {
-	// might be a collision, now check with vertices
-	// work out new vertices
-	std::vector<Point> new_vertices;
-	// transform the vertices using the transform functor
-	std::transform(vertices.begin(), vertices.end(), // source
-		       std::back_inserter(new_vertices), // destination
-		       Transform(new_worldpos+real_offset, 
-				 curr_angle+angle_inc));
-	
-	if (world->isCollidedV(new_vertices, layer, this)) {
-	    // it has collided
-	    return true;
-	}
+    // check for collisions
+    if (world->isCollided(new_worldpos+real_offset, radius, new_vertices,
+                          layer, this)) {
+        // it has collided
+        return true;
     }
     return false;
 }

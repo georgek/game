@@ -199,21 +199,19 @@ void UserTank::move()
     if (turret->isCollided(new_worldpos, 0)) {
 	return;
     }
-    // now do a simple radius check with the tank
-    if (world->isCollidedR(new_worldpos, radius, layer, this)) {
-	// might be a collision, now check with vertices
-	// work out new vertices
-	std::vector<Point> new_vertices;
-	// transform the vertices using the transform functor
-	std::transform(vertices.begin(), vertices.end(), // source
-		       std::back_inserter(new_vertices), // destination
-		       Transform(new_worldpos, heading));
-	
-	if (world->isCollidedV(new_vertices, layer, this)) {
-	    // it has collided
-	    curr_velocity = 0;
-	    return;
-	}
+
+    // work out new vertices
+    std::vector<Point> new_vertices;
+    // transform the vertices using the transform functor
+    std::transform(vertices.begin(), vertices.end(), // source
+                   std::back_inserter(new_vertices), // destination
+                   Transform(new_worldpos, heading));
+
+    // now check collisions with tank
+    if (world->isCollided(new_worldpos, radius, new_vertices, layer, this)) {
+        // it has collided
+        curr_velocity = 0;
+        return;
     }
 
     // no collision, set new world coords
@@ -235,20 +233,17 @@ void UserTank::rotate()
 	return;
     }
 
-    // check for collisions, simple radius check first
-    if (world->isCollidedR(worldpos, radius, layer, this)) {
-	// might be a collision, now check with vertices
-	// work out new vertices
-	std::vector<Point> new_vertices;
-	// transform the vertices using the transform functor
-	std::transform(vertices.begin(), vertices.end(), // source
-		       std::back_inserter(new_vertices), // destination
-		       Transform(worldpos, new_heading));
-	
-	if (world->isCollidedV(new_vertices, layer, this)) {
-	    // it has collided
-	    return;
-	}
+    // work out new vertices
+    std::vector<Point> new_vertices;
+    // transform the vertices using the transform functor
+    std::transform(vertices.begin(), vertices.end(), // source
+                   std::back_inserter(new_vertices), // destination
+                   Transform(worldpos, new_heading));
+
+    // check for collisions
+    if (world->isCollided(worldpos, radius, new_vertices, layer, this)) {
+        // it has collided
+        return;
     }
 
     // no collision, set new rotation

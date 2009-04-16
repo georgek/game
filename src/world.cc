@@ -68,6 +68,7 @@ void World::draw()
     glPopMatrix();
 
     // draw all renderables
+    // TODO: use std::foreach if possible
     RendMap::iterator pos;
     for (pos = renderables.begin(); pos != renderables.end(); ++pos) {
 	pos->second->draw();
@@ -77,18 +78,73 @@ void World::draw()
     SDL_GL_SwapBuffers();
 }
 
-bool World::isCollidedR (const Point& centre,
-			 const float& radius,
-			 const int& layer,
-			 const Collidable* caller) const 
+// bool World::isCollidedR (const Point& centre,
+// 			 const float& radius,
+// 			 const int& layer,
+// 			 const Collidable* caller) const 
+// {
+//     // check collision with world, hack for now
+//     if ((centre.getX() - radius) < 0 
+//     	|| (centre.getY() - radius) < 0
+//     	|| (centre.getX() + radius) > 4*256
+//     	|| (centre.getY() + radius) > 3*256
+//     	) {
+//     	return true;
+//     }
+
+//     // check all collidables in layer
+//     CollMap::const_iterator pos;
+//     for (pos = collidables.lower_bound(layer);
+// 	 pos != collidables.upper_bound(layer); ++pos) {
+// 	if (pos->second.get() != caller
+// 	    && pos->second->isCollidedR(centre, radius)) {
+// 	    return true;
+// 	}
+//     }
+//     return false;
+// }
+
+// bool World::isCollidedV (const std::vector<Point>& vertices,
+// 			 const int& layer, 
+// 			 const Collidable* caller) const 
+// {
+//     // check collision with map, hack for now
+//     // check if any vertices are outside map
+//     // std::vector<Point>::const_iterator i;
+//     // for (i = vertices.begin(); i != vertices.end(); ++i) {
+//     // 	if (i->getX() < 0 || i->getX() > 4*256) return true;
+//     // 	if (i->getY() < 0 || i->getY() > 3*256) return true;
+//     // }
+
+//     // check all collidables in layer
+//     CollMap::const_iterator pos;
+//     for (pos = collidables.lower_bound(layer);
+// 	 pos != collidables.upper_bound(layer); ++pos) {
+// 	if (pos->second.get() != caller
+// 	    && pos->second->isCollidedV(vertices)) {
+// 	    return true;
+// 	}
+//     }
+//     return false;    
+// }
+
+bool World::isCollided (const Point& centre, const float& radius,
+                        const std::vector<Point>& vertices,
+                        const int& layer, const Collidable* caller) const
 {
     // check collision with world, hack for now
     if ((centre.getX() - radius) < 0 
-	|| (centre.getY() - radius) < 0
-	|| (centre.getX() + radius) > 4*256
-	|| (centre.getY() + radius) > 3*256
-	) {
-	return true;
+    	|| (centre.getY() - radius) < 0
+    	|| (centre.getX() + radius) > 4*256
+    	|| (centre.getY() + radius) > 3*256
+    	) 
+    {
+        // check if any vertices are outside map
+        std::vector<Point>::const_iterator i;
+        for (i = vertices.begin(); i != vertices.end(); ++i) {
+            if (i->getX() < 0 || i->getX() > 4*256) return true;
+            if (i->getY() < 0 || i->getY() > 3*256) return true;
+        }
     }
 
     // check all collidables in layer
@@ -97,34 +153,14 @@ bool World::isCollidedR (const Point& centre,
 	 pos != collidables.upper_bound(layer); ++pos) {
 	if (pos->second.get() != caller
 	    && pos->second->isCollidedR(centre, radius)) {
-	    return true;
+	    // might have collided with this object, do vertices check
+            if (pos->second->isCollidedV(vertices)) {
+                // has collided
+                return true;
+            }
 	}
     }
     return false;
-}
-
-bool World::isCollidedV (const std::vector<Point>& vertices,
-			 const int& layer, 
-			 const Collidable* caller) const 
-{
-    // check collision with map, hack for now
-    // check if any vertices are outside map
-    std::vector<Point>::const_iterator i;
-    for (i = vertices.begin(); i != vertices.end(); ++i) {
-	if (i->getX() < 0 || i->getX() > 4*256) return true;
-	if (i->getY() < 0 || i->getY() > 3*256) return true;
-    }
-
-    // check all collidables in layer
-    CollMap::const_iterator pos;
-    for (pos = collidables.lower_bound(layer);
-	 pos != collidables.upper_bound(layer); ++pos) {
-	if (pos->second.get() != caller
-	    && pos->second->isCollidedV(vertices)) {
-	    return true;
-	}
-    }
-    return false;    
 }
 
 void World::update ()
