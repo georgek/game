@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- reference world file -->
 <world>
-  <map width="4" height="3">
+  <map width="8" height="8">
     <!-- textures -->
-    <texture id="0" filename="textures/earth2.png" type="png" />
-    <texture id="1" filename="textures/earth.png" type="png" />
+    <texture id="0" filename="textures/deadgrass.png" type="png" />
+    <texture id="1" filename="textures/halfgrass.png" type="png" />
+    <texture id="2" filename="textures/grass.png" type="png" />
     <tiles tile_width="256" tile_height="256">
-      <t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" />
-      <t id="1" x="0" /><t id="0" x="1" /><t id="0" x="1" /><t id="1" x="0" />
-      <t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" /><t id="1" x="0" />
+      <t id="2" x="0" /><t id="2" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="0" x="0" /><t id="0" x="1" /><t id="1" x="1" /><t id="0" x="0" />
+      <t id="2" x="0" /><t id="2" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="0" x="0" /><t id="0" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="2" x="0" /><t id="2" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="0" x="0" /><t id="0" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="2" x="0" /><t id="2" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="0" x="0" /><t id="0" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="2" x="0" /><t id="2" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="0" x="0" /><t id="0" x="1" /><t id="1" x="1" /><t id="0" x="0" />
+      <t id="2" x="0" /><t id="2" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="0" x="0" /><t id="0" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="2" x="0" /><t id="2" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="0" x="0" /><t id="0" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="2" x="0" /><t id="2" x="0" /><t id="1" x="0" /><t id="0" x="0" />
+      <t id="0" x="0" /><t id="0" x="0" /><t id="1" x="0" /><t id="0" x="0" />
     </tiles>
     <ornaments>
       <tank bodyfile="tank2.xml" turretfile="turret2.xml" 
 	    bodylayer="1" turretlayer="2" 
-	    xpos="128" ypos="128" />
+	    xpos="256" ypos="256" />
     </ornaments>
   </map>
   <usertank bodyfile="tank.xml" turretfile="turret.xml" 
 	    bodylayer="1" turretlayer="2" 
-	    xpos="512" ypos="512" />
+	    xpos="512" ypos="256" />
   <enemies>
     <tank bodytex="body2.png" turrettex="turret2.png" />
   </enemies>
