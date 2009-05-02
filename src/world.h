@@ -26,6 +26,7 @@
 
 #include "collidable.h"
 #include "point.h"
+#include "texture.h"
 #include "timer.h"
 
 class World : public Renderable, public Controllable
@@ -85,6 +86,15 @@ private:
     CollMap collidables;
     // vector of controllables
     ConList controllables;
+
+    // containers for map
+    // tile textures
+    typedef std::map<int, Texture::sPtr> TexMap;
+    TexMap texture_list;
+    // vector for tile textures (ints reference texmap)
+    std::vector<int> tile_textures;
+    // vector for tile tangibility
+    std::vector<bool> tile_tangibility;
 
     // timer
     Timer timer;

@@ -245,12 +245,6 @@ void World::parseMap ()
     
     // read rest of the map
     // textures
-    typedef std::map<int, Texture::sPtr> TexMap;
-    TexMap texture_list;
-    // vector for tile textures
-    std::vector<int> tile_textures;
-    // vector for tile tangibility
-    std::vector<bool> tile_tangibility;
     // reserve space for all tiles
     tile_textures.reserve(width*height);
     tile_tangibility.reserve(width*height);

@@ -21,6 +21,7 @@
 
 Texture::Texture(const std::string& filename, texture_types type, 
 		 const int& width, const int& height) :
+    count (new long(1)),
     filename (filename),
     type (type),
     tex_id (0),
@@ -54,11 +55,15 @@ Texture::Texture(const std::string& filename, texture_types type,
 	make_opengl_tex();
     }
 
-    // destroy image data
-    clean_up();
+    // destroy texel data
+    if (texels) {
+	delete[] texels;
+	texels = 0;
+    }
 }
 
 Texture::Texture() :
+    count (0),
     type(automatic),
     tex_id(0),
     width(0),
@@ -70,9 +75,46 @@ Texture::Texture() :
 
 }
 
+Texture::Texture (const Texture& other) :
+    count (other.count),
+    filename (other.filename),
+    type (other.type),
+    tex_id (other.tex_id),
+    width (other.width),
+    height (other.height),
+    bit_depth (other.bit_depth),
+    colour_type (other.colour_type),
+    texels (other.texels)
+{
+    // this is a new reference
+    if (count) {
+        ++(*count);
+    }
+}
+
+Texture& Texture::operator= (const Texture& other)
+{
+    if (&other != this) {
+        release();
+        count = other.count;
+        filename = other.filename;
+        type = other.type;
+        tex_id = other.tex_id;
+        width = other.width;
+        height = other.height;
+        bit_depth = other.bit_depth;
+        colour_type = other.colour_type;
+        texels = other.texels;
+        if (count) {
+            ++(*count);
+        }
+    }
+    return *this;
+}
+
 Texture::~Texture() 
 {
-
+    release();
 }
 
 GLuint Texture::getTexId() const
@@ -285,11 +327,12 @@ void Texture::make_opengl_tex()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 }
 
-void Texture::clean_up() 
+void Texture::release()
 {
-    // destroy texel data
-    if (texels) {
-	delete[] texels;
-	texels = 0;
+    // delete texture object if this is last reference
+    if (count && --(*count) == 0) {
+        delete count;
+        count = 0;
+        glDeleteTextures(1, &tex_id);
     }
 }
