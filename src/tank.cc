@@ -15,6 +15,7 @@
 
 #include "bullet.h"
 #include "pnpoly.h"
+#include "sprite.h"
 #include "tank.h"
 #include "transform.h"
 #include "world.h"
@@ -279,6 +280,16 @@ void Tank::fire()
                                     1500, 100));
     World::RendMap::iterator bullpos = world->addRenderable (bullet, 3);
     bullet->run(bullpos);
+
+    // put a sprite near it for barrel animation
+    Point end_of_barrel = worldpos +
+        Point::polarD (115, turret->getTurretAngle());
+    
+    Sprite::Ptr sprite (new Sprite (world, "textures/gunfire.png",
+                                    end_of_barrel, 14, 30, 1,
+                                    turret->getTurretAngle()));
+    World::RendMap::iterator spritepos = world->addRenderable (sprite, 3);
+    sprite->run(spritepos);
 }
 
 void Tank::move()

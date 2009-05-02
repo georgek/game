@@ -11,6 +11,7 @@
 #include "SDL_opengl.h"
 
 #include "bullet.h"
+#include "sprite.h"
 #include "world.h"
 
 const double PI = 4.0*std::atan(1.0);
@@ -93,7 +94,11 @@ void Bullet::draw()
         || std::abs((new_worldpos / destination) - heading) > 1) {
         // it's at or past the destination
         worldpos = destination;
-        // make an explosion event here
+        // make an explosion effect
+        Sprite::Ptr sprite (new Sprite (world, "textures/explosionsprite.png",
+                                        destination, 7, 20, 1));
+        World::RendMap::iterator spritepos = world->addRenderable (sprite, 3);
+        sprite->run(spritepos);
         // remove self from world
         world->remRenderable(this_bullet);
         return;
