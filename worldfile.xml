@@ -25,14 +25,14 @@
       <t id="0" x="0" /><t id="0" x="0" /><t id="1" x="0" /><t id="0" x="0" />
     </tiles>
     <ornaments>
-      <tank bodyfile="tank2.xml" turretfile="turret2.xml" 
+<!--      <tank bodyfile="tank2.xml" turretfile="turret2.xml" 
 	    bodylayer="1" turretlayer="2" 
-	    xpos="256" ypos="256" />
+	    xpos="256" ypos="256" /> -->
     </ornaments>
   </map>
   <usertank bodyfile="tank.xml" turretfile="turret.xml" 
 	    bodylayer="1" turretlayer="2" 
-	    xpos="512" ypos="256" />
+	    xpos="256" ypos="512" />
   <enemies>
     <tank bodytex="body2.png" turrettex="turret2.png" />
   </enemies>

@@ -25,6 +25,7 @@
 #include "turret.h"
 #include "usertank.h"
 #include "world.h"
+#include "aitank.h"
 
 World::World (const std::string& inputworldfile) :
     worldfile (inputworldfile.c_str())
@@ -83,19 +84,19 @@ bool World::isCollided (const Point& centre, const float& radius,
                         const int& layer, const Collidable* caller) const
 {
     // check collision with world, hack for now
-    if ((centre.getX() - radius) < 0 
-    	|| (centre.getY() - radius) < 0
-    	|| (centre.getX() + radius) > 4*256
-    	|| (centre.getY() + radius) > 3*256
-    	) 
-    {
-        // check if any vertices are outside map
-        std::vector<Point>::const_iterator i;
-        for (i = vertices.begin(); i != vertices.end(); ++i) {
-            if (i->getX() < 0 || i->getX() > 4*256) return true;
-            if (i->getY() < 0 || i->getY() > 3*256) return true;
-        }
-    }
+    // if ((centre.getX() - radius) < 0 
+    // 	|| (centre.getY() - radius) < 0
+    // 	|| (centre.getX() + radius) > 4*256
+    // 	|| (centre.getY() + radius) > 3*256
+    // 	) 
+    // {
+    //     // check if any vertices are outside map
+    //     std::vector<Point>::const_iterator i;
+    //     for (i = vertices.begin(); i != vertices.end(); ++i) {
+    //         if (i->getX() < 0 || i->getX() > 4*256) return true;
+    //         if (i->getY() < 0 || i->getY() > 3*256) return true;
+    //     }
+    // }
 
     // check all collidables in layer
     CollMap::const_iterator pos;
@@ -116,7 +117,7 @@ bool World::isCollided (const Point& centre, const float& radius,
 void World::update ()
 {
     // update all controllables
-    ConVect::iterator pos;
+    ConList::iterator pos;
     for (pos = controllables.begin(); pos != controllables.end(); ++pos) {
 	(*pos)->update();
     }
@@ -125,10 +126,43 @@ void World::update ()
 void World::update (SDL_Event& event) 
 {
     // update all controllables
-    ConVect::iterator pos;
+    ConList::iterator pos;
     for (pos = controllables.begin(); pos != controllables.end(); ++pos) {
 	(*pos)->update(event);
     }
+}
+
+World::RendMap::iterator World::addRenderable (const Renderable::Ptr& rend, 
+                                        const int& layer)
+{
+    return renderables.insert(std::make_pair(layer, rend));
+}
+
+World::CollMap::iterator World::addCollidable (const Collidable::Ptr& coll, 
+                                        const int& layer)
+{
+    return collidables.insert(std::make_pair(layer, coll));
+}
+
+World::ConList::iterator World::addControllable (const Controllable::Ptr& cont)
+{
+    controllables.push_back(cont);
+    return --controllables.end();
+}
+
+void World::remRenderable (const World::RendMap::iterator& pos)
+{
+    renderables.erase(pos);
+}
+
+void World::remCollidable (const World::CollMap::iterator& pos)
+{
+    collidables.erase(pos);
+}
+
+void World::remControllable (const World::ConList::iterator& pos)
+{
+    controllables.erase(pos);
 }
 
 // utility function for parsing the worldfile
@@ -179,7 +213,7 @@ void World::parseWorldFile ()
 		UserTank::Ptr tank (new UserTank(this, bodylayer, turret, 
 						 Point(init_x, init_y), 
 						 bodyfile));
-
+                
 		// add to renderable map
 		renderables.insert(std::make_pair(bodylayer, tank));
 		// add to collidable map

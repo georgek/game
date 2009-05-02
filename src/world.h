@@ -9,9 +9,9 @@
 #define WORLD_H
 
 #include <fstream>
+#include <list>
 #include <map>
 #include <string>
-#include <vector>
 
 #include <libxml++/libxml++.h>
 #include <libxml++/parsers/textreader.h>
@@ -36,24 +36,12 @@ public:
     virtual ~World();
 
     // set world offset (e.g. to be done by main character)
-    void	setOffset(const Point& new_offset);
+    void setOffset(const Point& new_offset);
     // get world offset (e.g. for stuff that moves with the world)
-    Point	getOffset() const;
+    Point getOffset() const;
 
     // implement renderable method
     virtual void draw();
-
-    // implement collidable methods
-    // for simple circles
-    // bool isCollidedR(const Point& centre,
-    //     	     const float& radius,
-    //     	     const int& layer,
-    //     	     const Collidable* caller) const;
-
-    // // for arbitrary shapes
-    // bool isCollidedV(const std::vector<Point>& vertices,
-    //     	     const int& layer,
-    //     	     const Collidable* caller) const;
 
     // collision detection
     bool isCollided(const Point& centre, const float& radius,
@@ -63,6 +51,22 @@ public:
     // implement controllable methods
     virtual void update();
     virtual void update(SDL_Event& event);
+
+    typedef std::multimap<int, Renderable::Ptr> RendMap;
+    typedef std::multimap<int, Collidable::Ptr> CollMap;
+    typedef std::list<Controllable::Ptr> ConList;
+
+    // allows other classes to add to the containers
+    RendMap::iterator addRenderable(const Renderable::Ptr& rend,
+                                    const int& layer);
+    CollMap::iterator addCollidable(const Collidable::Ptr& coll,
+                                    const int& layer);
+    ConList::iterator addControllable(const Controllable::Ptr& cont);
+
+    // allows other classes to remove from the containers
+    void remRenderable(const RendMap::iterator& pos);
+    void remCollidable(const CollMap::iterator& pos);
+    void remControllable(const ConList::iterator& pos);
 
 private:
     // the worldfile that this world is made from
@@ -76,14 +80,11 @@ private:
 
     // containers for references to objects
     // multimap of renderables
-    typedef std::multimap<int, Renderable::Ptr> RendMap;
     RendMap renderables;
     // multimap of collidables
-    typedef std::multimap<int, Collidable::Ptr> CollMap;
     CollMap collidables;
     // vector of controllables
-    typedef std::vector<Controllable::Ptr> ConVect;
-    ConVect controllables;
+    ConList controllables;
 
     // timer
     Timer timer;

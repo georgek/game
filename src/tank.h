@@ -22,7 +22,8 @@
 #include "texture.h"
 #include "timer.h"
 #include "turret.h"
-#include "world.h"
+
+class World;
 
 class Tank : public Renderable, public Collidable
 {
@@ -47,6 +48,12 @@ public:
     virtual bool isCollidedR(const Point& centre,
 			     const float& radius) const;
     virtual bool isCollidedV(const std::vector<Point>& vertices) const;
+
+    // returns world position
+    virtual Point getWorldPos() const;
+
+    // fire a bullet
+    virtual void fire();
 
     // convenience typedef
     typedef std::tr1::shared_ptr<Tank> Ptr;
@@ -88,6 +95,11 @@ protected:
     void makeDrawingList();
     // for parsing input file
     void parseInputFile(const std::string& filename);
+
+    // perform transformations
+    virtual void move();
+    virtual void rotate();
+    virtual void rotate_turret();
 };
 
 #endif /* TANK_H */

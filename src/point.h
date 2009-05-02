@@ -10,11 +10,18 @@
 #ifndef POINT_H
 #define POINT_H
 
+#include <iostream>
+
 class Point 
 {
 public:
     Point (const float& x = 0, const float& y = 0);
     ~Point ();
+
+    // named constructors
+    static Point screen (const float& x = 0, const float& y = 0);
+    static Point polarD (const float& radius = 0, const float& angle = 0);
+    static Point polarR (const float& radius = 0, const float& angle = 0);
     
     float getX() const;
     float getY() const;
@@ -32,10 +39,16 @@ public:
     Point& operator-= (const Point& rhs);
     const Point operator+ (const Point& other) const;
     const Point operator- (const Point& other) const;
-    // this operator has special behaviour, it calculates the
-    // euclidean distance between the points
+    // these operators have special behaviour
+    // calculates the euclidean distance between the points
     float operator% (const Point& other) const;
-    
+    // calculates angle of line from this point to other point
+    float operator/ (const Point& other) const;
+
+    // for printing to standard output
+    friend std::ostream& operator<< (std::ostream& out, 
+                                     const Point& point);
+
     // reference resolution
     static int refw;
     static int refh;

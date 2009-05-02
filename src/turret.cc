@@ -65,6 +65,7 @@ void Turret::draw()
 {
     // find screen position
     Point screenpos =  worldpos - world->getOffset();
+    
     // (re)start timer
     timer.start();
     

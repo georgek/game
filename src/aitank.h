@@ -3,17 +3,18 @@
  * UEA registration number: 3316173
  */
 
-// class for a friendly tank
+// This is for an AI tank.  An object of this class will just try to
+// drive to a certain place on the map and stay there until that place
+// changes
 
-#ifndef FRIENDLYTANK_H
-#define FRIENDLYTANK_H
+#ifndef AITANK_H
+#define AITANK_H
 
 #include <string>
 
 #include "SDL.h"
 #include "SDL_opengl.h"
 
-#include "aitank.h"
 #include "collidable.h"
 #include "controllable.h"
 #include "renderable.h"
@@ -23,39 +24,39 @@
 
 class World;
 
-class FriendlyTank : public AiTank
+class AiTank : public Tank, public Controllable
 {
 public:
     // basic constructor
-    FriendlyTank(World* world, const int& layer, const Turret::Ptr& turret,
+    AiTank(World* world, const int& layer, const Turret::Ptr& turret,
                  const std::string& texturename,
                  const Point& init_pos,
                  const int& engine_force, const int& mass, const int& rpm);
     // from input file
-    FriendlyTank(World* world, const int& layer, const Turret::Ptr& turret,
+    AiTank(World* world, const int& layer, const Turret::Ptr& turret,
                  const Point& init_pos,
                  const std::string& inputfile);
-    virtual ~FriendlyTank();
+    virtual ~AiTank();
 
-    // control functions
+    // overload draw function
+    virtual void draw();
+
+    // implement controllable functions
     virtual void update();
     virtual void update(SDL_Event& event);
 
-    // make it follow a tank
-    void follow(Tank* tank);
-
     // convenience typedef
-    typedef std::tr1::shared_ptr<FriendlyTank> Ptr;
+    typedef std::tr1::shared_ptr<AiTank> Ptr;
 
-private:
-    Tank* leading_tank;
-
-    // sets whether tank is following or not
-    bool is_following;
-    
+protected:
     virtual void move();
     virtual void rotate();
     virtual void rotate_turret();
+
+    // location that the tank wants to be at
+    Point destination;
+    // distance from destination to aim for
+    float destination_pad;
 };
 
-#endif // FRIENDLYTANK_H
+#endif // AITANK_H

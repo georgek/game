@@ -13,6 +13,7 @@
 #include <libxml++/libxml++.h>
 #include <libxml++/parsers/textreader.h>
 
+#include "bullet.h"
 #include "pnpoly.h"
 #include "tank.h"
 #include "transform.h"
@@ -146,6 +147,11 @@ bool Tank::isCollidedV(const std::vector<Point>& vertices) const
     return false;
 }
 
+Point Tank::getWorldPos() const
+{
+    return worldpos;
+}
+
 void Tank::makeDrawingList() 
 {
     // calculate texture vertices
@@ -248,4 +254,197 @@ void Tank::parseInputFile(const std::string& filename)
 	    }
 	}
     }
+}
+
+void Tank::fire()
+{
+    // find point where mouse is
+    int vh = SDL_GetVideoInfo()->current_h;
+    Point destination = Point::screen (mouse_x, vh - mouse_y);
+
+    destination = destination + world->getOffset();
+    destination.setX(destination.getX() - Point::refh/2);
+    destination.setY(destination.getY() - Point::refh/2);
+
+    // adjust for real turret position
+    float radius = worldpos % destination;
+
+    destination = worldpos +
+        Point::polarD (radius, turret->getTurretAngle());
+    
+    // fire a bullet
+    Bullet::Ptr bullet (new Bullet (world, "textures/bullet.png",
+                                    worldpos, destination,
+                                    115,
+                                    1500, 100));
+    World::RendMap::iterator bullpos = world->addRenderable (bullet, 3);
+    bullet->run(bullpos);
+}
+
+void Tank::move()
+{
+    float ticks = timer.get_ticks();
+    // apply acceleration
+    if (curr_velocity < target_velocity && target_velocity > 0) {
+	// accelerate forwards
+	curr_velocity += accn*ticks/1000.0;
+	if (curr_velocity > target_velocity) curr_velocity = target_velocity;
+    }
+    else if (curr_velocity > target_velocity && target_velocity < 0) {
+	// accelerate backwards
+	curr_velocity -= accn*ticks/1000.0;
+	if (curr_velocity < target_velocity) curr_velocity = target_velocity;
+    }
+    else if (curr_velocity > target_velocity && target_velocity == 0) {
+	// deccelerate
+	curr_velocity -= dccn*ticks/1000.0;
+	if (curr_velocity < target_velocity) curr_velocity = target_velocity;
+    }
+    else if (curr_velocity < target_velocity && target_velocity == 0) {
+	// deccelerate
+	curr_velocity += dccn*ticks/1000.0;
+	if (curr_velocity > target_velocity) curr_velocity = target_velocity;
+    }
+
+    // move according to current velocities
+    Point new_worldpos;
+    new_worldpos.setX(worldpos.getX() + curr_velocity*xf*ticks/1000.0);
+    new_worldpos.setY(worldpos.getY() + curr_velocity*yf*ticks/1000.0);
+
+    if (new_worldpos == worldpos) {
+	// nothing do so return
+	return;
+    }
+
+    // check for collisions, first check turret
+    if (turret->isCollided(new_worldpos, 0)) {
+	return;
+    }
+
+    // work out new vertices
+    std::vector<Point> new_vertices;
+    // transform the vertices using the transform functor
+    std::transform(vertices.begin(), vertices.end(), // source
+                   std::back_inserter(new_vertices), // destination
+                   Transform(new_worldpos, heading));
+
+    // now check collisions with tank
+    if (world->isCollided(new_worldpos, radius, new_vertices, layer, this)) {
+        // it has collided
+        curr_velocity = 0;
+        return;
+    }
+
+    // no collision, set new world coords
+    worldpos = new_worldpos;
+}
+
+void Tank::rotate() 
+{
+    // rotate tank according to current rpm
+    float new_heading = heading + 
+	(curr_rpm*timer.get_ticks())/(60000.0f/360.0f);
+    if (new_heading > 360) new_heading = new_heading - 360;
+    if (new_heading < 0) new_heading = 360 + new_heading;
+
+    if (new_heading == heading) {
+	// nothing to do
+	return;
+    }
+
+    // work out new vertices
+    std::vector<Point> new_vertices;
+    // transform the vertices using the transform functor
+    std::transform(vertices.begin(), vertices.end(), // source
+                   std::back_inserter(new_vertices), // destination
+                   Transform(worldpos, new_heading));
+
+    // check for collisions
+    if (world->isCollided(worldpos, radius, new_vertices, layer, this)) {
+        // it has collided
+        return;
+    }
+
+    // no collision, set new rotation
+    heading = new_heading;
+
+    if (curr_rpm) {
+	// calculate new x and y factors for movement
+	xf = std::cos((heading+90) * PI/180.0);
+	yf = std::sin((heading+90) * PI/180.0);
+    }
+}
+
+void Tank::rotate_turret()
+{
+    // rotate turret
+    // get current resolution
+    int vw = SDL_GetVideoInfo()->current_w;
+    int vh = SDL_GetVideoInfo()->current_h;
+    
+    // convert opengl coords to sdl coords
+    Point screenpos = worldpos - world->getOffset();
+    float sdlxOffset = screenpos.getDispX() + vw/2;
+    float sdlyOffset = vh/2 - screenpos.getDispY();
+    
+    // angle between tank and mouse
+    float dx = sdlxOffset - mouse_x;
+    float dy = sdlyOffset - mouse_y;
+    float theta;
+
+    // y=atan(x) gives only -PI/2 < y < PI/2 so the answer must be
+    // adjusted, also dx = 0 is a special case since we cannot divide
+    // by zero
+    if (dx == 0) {
+        theta = dy>0 ? 0 : PI;
+    }
+    else if (dx>0) {
+        theta = -std::atan(dy/dx)+PI/2;
+    }
+    else { /* dx<0 */
+        theta = -std::atan(dy/dx)+3*PI/2;
+    }
+
+    // convert to degrees
+    theta = theta*180/PI;
+
+    if (theta == turret->getTurretAngle()) {
+        // nothing to do
+        return;
+    }
+
+    // find out how far the turret can move in one tick
+    float tick_angle = (turret_rpm*timer.get_ticks())/(60000.0f/360.0f);
+
+    // difference between current turret direction and mouse direction
+    float diff = theta - turret->getTurretAngle();
+
+    // now set turret rpm
+    if (std::fabs(diff) < tick_angle) {
+	curr_turret_rpm = 0;
+	// check for collisions
+	if (!turret->isCollided(worldpos, theta-turret->getTurretAngle())) {
+	    // not collided, set angle exactly to mouse
+	    turret->setTurretAngle(theta);
+	}
+	// return because there is nothing else to do
+	return;
+    }
+    else if (diff >= -180 && diff < 180) {
+	curr_turret_rpm = (diff > 0 ? turret_rpm : -turret_rpm) + curr_rpm;
+    }
+    else {
+	curr_turret_rpm = (diff > 0 ? -turret_rpm : turret_rpm) + curr_rpm;
+    }
+    
+    // find change in angle based on current rpm
+    float dtheta = (curr_turret_rpm*timer.get_ticks())/(60000.0f/360.0f);
+
+    // check for collisions
+    if (turret->isCollided(worldpos, dtheta)) {
+	// collided
+	return;
+    }
+    // not collided, set new turret angle
+    turret->incTurretAngle(dtheta);
 }

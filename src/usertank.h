@@ -8,6 +8,7 @@
 #ifndef USERTANK_H
 #define USERTANK_H
 
+#include <list>
 #include <string>
 #include <tr1/memory>
 #include <vector>
@@ -17,13 +18,15 @@
 
 #include "collidable.h"
 #include "controllable.h"
+#include "friendlytank.h"
 #include "point.h"
 #include "renderable.h"
 #include "tank.h"
 #include "texture.h"
 #include "timer.h"
 #include "turret.h"
-#include "world.h"
+
+class World;
 
 class UserTank : public Tank, public Controllable
 {
@@ -53,13 +56,24 @@ public:
     virtual void update();
     virtual void update(SDL_Event& event);
 
+    // add a friendly tank to the convoy
+    void addFriendly(FriendlyTank::Ptr friendly);
+
+    virtual void fire();
+
     // convenience typedef
     typedef std::tr1::shared_ptr<UserTank> Ptr;
 
 private:
-    void move();
-    void rotate();
-    void rotate_turret();
+    typedef std::list<FriendlyTank::Ptr> ConvoyList;
+    ConvoyList convoy;
+
+    virtual void move();
+    virtual void rotate();
+    virtual void rotate_turret();
+
+    // function to add a friend tank to the map, for testing only
+    void addFriend();
 };
 
 #endif /* USERTANK_H */

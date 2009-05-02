@@ -83,6 +83,14 @@ int main (int argc, char* argv[])
 	    break;
 	}
     }
+
+    // testing
+    Point test (1,1);
+    Point test2 (2,0);
+    std::cout << test << std::endl;
+    std::cout << test2 << std::endl;
+    std::cout << test % test2 << std::endl;
+    std::cout << test / test2 << std::endl;
     
     std::cout << "Width = " << width << ", Height = " << height 
 	      << ", FPS = " << fps << std::endl;

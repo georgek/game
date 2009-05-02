@@ -18,7 +18,8 @@
 #include "renderable.h"
 #include "texture.h"
 #include "timer.h"
-#include "world.h"
+
+class World;
 
 class Turret : public Renderable, public Collidable 
 {
