@@ -19,6 +19,7 @@
 #include "SDL.h"
 #include "SDL_opengl.h"
 
+#include "cursor.h"
 #include "point.h"
 #include "tank.h"
 #include "texture.h"
@@ -74,9 +75,6 @@ void World::draw()
     for (pos = renderables.begin(); pos != renderables.end(); ++pos) {
 	pos->second->draw();
     }
-
-    // swap buffers
-    SDL_GL_SwapBuffers();
 }
 
 bool World::isCollided (const Point& centre, const float& radius,

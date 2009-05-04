@@ -5,7 +5,7 @@ game_SOURCES = main.cc collidable.h controllable.h point.h point.cc	\
 	timer.cc turret.h turret.cc usertank.h usertank.cc world.h	\
 	world.cc pnpoly.h pnpoly.cc transform.h transform.cc		\
 	friendlytank.h friendlytank.cc aitank.h aitank.cc bullet.h	\
-	bullet.cc sprite.h sprite.cc
+	bullet.cc sprite.h sprite.cc cursor.h cursor.cc
 
 EXTRA_DIST = tools/shared_ptr.h
 

@@ -15,6 +15,7 @@
 #include "SDL.h"
 #include "SDL_opengl.h"
 
+#include "cursor.h"
 #include "pnpoly.h"
 #include "point.h"
 #include "timer.h"
@@ -84,17 +85,6 @@ int main (int argc, char* argv[])
 	}
     }
 
-    // testing
-    Point test (1,1);
-    Point test2 (2,0);
-    std::cout << test << std::endl;
-    std::cout << test2 << std::endl;
-    std::cout << test % test2 << std::endl;
-    std::cout << test / test2 << std::endl;
-    
-    std::cout << "Width = " << width << ", Height = " << height 
-	      << ", FPS = " << fps << std::endl;
-    
     // get worldfile
     std::string aworldfile;
     if (optind < argc) {
@@ -113,6 +103,9 @@ int main (int argc, char* argv[])
     if (!init(width, height)) {
 	return 1;
     }
+
+    // make a cursor
+    Cursor cursor ("textures/crosshair.png", 10);
 
     // make world
     std::auto_ptr<World> world;
@@ -153,8 +146,11 @@ int main (int argc, char* argv[])
 		quit = true;
 	    }
 	    else {
-		// send event to screen
+		// send event to world
 		world->update(event);
+
+                // send event to cursor
+                cursor.update(event);
 	    }
 	}
 	// update objects
@@ -162,6 +158,12 @@ int main (int argc, char* argv[])
 
 	// draw world
 	world->draw();
+
+        // draw cursor
+        cursor.draw();
+
+        // swap buffers
+        SDL_GL_SwapBuffers();
 
 	// cap frame rate
 	if (FPS_CAP && fpsCap.get_ticks() < 1000 / fps) {
@@ -221,6 +223,9 @@ bool init(const int& width, const int& height)
 
     // set window title
     SDL_WM_SetCaption("CMPC2G04 Game", NULL);
+
+    // hide mouse cursor
+    SDL_ShowCursor(0);
 
     return true;
 }
