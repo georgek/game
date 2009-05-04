@@ -21,3 +21,4 @@ config.log
 config.status
 install-sh
 missing
+/src/TAGS

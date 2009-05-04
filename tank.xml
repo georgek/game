@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- reference tank input file -->
-<tank accn="540" dccn="360" topspeed="180" rpm="18">
+<tank accn="540" dccn="360" topspeed="200" rpm="18">
   <texture filename="textures/tankbodydirty.png" />
   <!-- the vertices relative to the centre of the texture, the num
        attribute is included as a convenience only -->
