@@ -95,6 +95,12 @@ private:
     std::vector<int> tile_textures;
     // vector for tile tangibility
     std::vector<bool> tile_tangibility;
+    // world boundary vertices
+    std::vector<Point> boundary;
+    // map size (in tiles)
+    int map_width, map_height;
+    // tile dimensions
+    int tw, th;
 
     // timer
     Timer timer;

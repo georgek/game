@@ -20,6 +20,7 @@
 #include "SDL_opengl.h"
 
 #include "cursor.h"
+#include "pnpoly.h"
 #include "point.h"
 #include "tank.h"
 #include "texture.h"
@@ -37,6 +38,177 @@ World::World (const std::string& inputworldfile) :
     }
     catch (const std::exception& e) {
 	std::cout << "XML Exception: " << e.what() << std::endl;
+    }
+
+    // print tangibility for debugging
+    // print rows
+    for (int r = 0; r < map_height; ++r) {
+        // print columns
+        for (int c = 0; c < map_width; ++c) {
+            std::cout << tile_tangibility[r*map_width+c];
+        }
+        std::cout << std::endl;
+    }
+
+    // find boundary vertices using the Marching Squares algorithm
+    // find the first tangible square
+    int x = 1;
+    int y = 1;
+    while (tile_tangibility[(x-1)+(y-1)*map_width]
+           && tile_tangibility[x+(y-1)*map_width]
+           && tile_tangibility[(x-1)+y+map_width]
+           && tile_tangibility[x+y*map_width]) {
+        // advance point
+        if (++x >= map_width) {
+            x = 0;
+            if (++y >= map_height) {
+                break;
+            }
+        }
+    }
+    Point curr (x, y);
+    // directions
+    Point N (0,-1);
+    Point E (1, 0);
+    Point S (0, 1);
+    Point W (-1,0);
+
+    // first point must be a vertex
+    boundary.push_back(curr);
+    // trace shape
+    Point prev_direction;
+    do {
+        // find direction we need to move based on which squares are
+        // tangible
+
+        // something clever found here:
+        // <http://www.tomgibara.com/computer-vision/MarchingSquares.java>
+        int sum = 0;
+        if (!tile_tangibility[(curr.getX()-1)+(curr.getY()-1)*map_width])
+            sum |= 1;
+        if (!tile_tangibility[curr.getX()+(curr.getY()-1)*map_width])
+            sum |= 2;
+        if (!tile_tangibility[(curr.getX()-1)+curr.getY()*map_width])
+            sum |= 4;
+        if (!tile_tangibility[curr.getX()+curr.getY()*map_width])
+            sum |= 8;
+        switch (sum) {
+        case  1:
+            if (curr != boundary.front()) {
+                // this is a vertex so add it
+                boundary.push_back(curr);
+            }
+            curr += N;
+            prev_direction = N;
+            break;
+        case  2:
+            if (curr != boundary.front()) {
+                // this is a vertex so add it
+                boundary.push_back(curr);
+            }
+            curr += E;
+            prev_direction = E;
+            break;
+        case 3:
+            curr += E;
+            prev_direction = E;
+            break;
+        case  4:
+            if (curr != boundary.front()) {
+                // this is a vertex so add it
+                boundary.push_back(curr);
+            }
+            curr += W;
+            prev_direction = W;
+            break;
+        case  5:
+            curr += N;
+            prev_direction = N;
+            break;
+        case  6:
+            if (curr != boundary.front()) {
+                // this is a vertex so add it
+                boundary.push_back(curr);
+            }
+            curr += prev_direction == N ? W : E;
+            prev_direction = prev_direction == N ? W : E;
+            break;
+        case  7:
+            if (curr != boundary.front()) {
+                // this is a vertex so add it
+                boundary.push_back(curr);
+            }
+            curr += E;
+            prev_direction = E;
+            break;
+        case  8:
+            if (curr != boundary.front()) {
+                // this is a vertex so add it
+                boundary.push_back(curr);
+            }
+            curr += S;
+            prev_direction = S;
+            break;
+        case  9:
+            if (curr != boundary.front()) {
+                // this is a vertex so add it
+                boundary.push_back(curr);
+            }
+            curr += prev_direction == E ? N : S;
+            prev_direction = prev_direction == E ? N : S;
+            break;
+        case 10:
+            curr += S;
+            prev_direction = S;
+            break;
+        case 11:
+            if (curr != boundary.front()) {
+                // this is a vertex so add it
+                boundary.push_back(curr);
+            }
+            curr += S;
+            prev_direction = S;
+            break;
+        case 12:
+            curr += W;
+            prev_direction = W;
+            break;
+        case 13:
+            if (curr != boundary.front()) {
+                // this is a vertex so add it
+                boundary.push_back(curr);
+            }
+            curr += N;
+            prev_direction = N;
+            break;
+        case 14:
+            if (curr != boundary.front()) {
+                // this is a vertex so add it
+                boundary.push_back(curr);
+            }
+            curr += W;
+            prev_direction = W;
+            break;
+        default: throw 1;
+        }
+    } while (curr != boundary.front());
+
+    // print each vertex for debugging
+    for (std::vector<Point>::iterator pos = boundary.begin();
+         pos != boundary.end(); ++pos) {
+        std::cout << *pos << std::endl;
+    }
+
+    // convert them to world coordinates
+    for (std::vector<Point>::iterator pos = boundary.begin();
+         pos != boundary.end(); ++pos) {
+        pos->setX(pos->getX()*tw);
+        pos->setY((map_height-pos->getY())*th);
+    }
+
+    for (std::vector<Point>::iterator pos = boundary.begin();
+         pos != boundary.end(); ++pos) {
+        std::cout << *pos << std::endl;
     }
 }
 
@@ -81,24 +253,17 @@ bool World::isCollided (const Point& centre, const float& radius,
                         const std::vector<Point>& vertices,
                         const int& layer, const Collidable* caller) const
 {
-    // check collision with world, hack for now
-    // if ((centre.getX() - radius) < 0 
-    // 	|| (centre.getY() - radius) < 0
-    // 	|| (centre.getX() + radius) > 4*256
-    // 	|| (centre.getY() + radius) > 3*256
-    // 	) 
-    // {
-    //     // check if any vertices are outside map
-    //     std::vector<Point>::const_iterator i;
-    //     for (i = vertices.begin(); i != vertices.end(); ++i) {
-    //         if (i->getX() < 0 || i->getX() > 4*256) return true;
-    //         if (i->getY() < 0 || i->getY() > 3*256) return true;
-    //     }
-    // }
+    // check collision with world, check that all of the vertices are
+    // inside the boundary
+    for (std::vector<Point>::const_iterator pos = vertices.begin();
+         pos < vertices.end(); ++pos) {
+	if (!wrf::pnpoly(boundary, *pos)) {
+	    return true;
+	}
+    }
 
     // check all collidables in layer
-    CollMap::const_iterator pos;
-    for (pos = collidables.lower_bound(layer);
+    for (CollMap::const_iterator pos = collidables.lower_bound(layer);
 	 pos != collidables.upper_bound(layer); ++pos) {
 	if (pos->second.get() != caller
 	    && pos->second->isCollidedR(centre, radius)) {
@@ -230,22 +395,21 @@ void World::parseWorldFile ()
 void World::parseMap () 
 {
     // get map attributes
-    int width, height;
     std::stringstream s;
     worldfile.move_to_first_attribute();
     s << worldfile.get_value().raw();
-    s >> width;
+    s >> map_width;
     s.str(""); s.clear();
     worldfile.move_to_next_attribute();
     s << worldfile.get_value().raw();
-    s >> height;
+    s >> map_height;
     s.str(""); s.clear();
     
     // read rest of the map
     // textures
     // reserve space for all tiles
-    tile_textures.reserve(width*height);
-    tile_tangibility.reserve(width*height);
+    tile_textures.reserve(map_width*map_height);
+    tile_tangibility.reserve(map_width*map_height);
     // tile dimensions
     Point td (0, 0);
     // something for ornaments
@@ -284,7 +448,6 @@ void World::parseMap ()
 	}
 	else if (worldfile.get_name() == "tiles") {
 	    // get tile dimensions
-	    int tw, th;
 	    worldfile.move_to_first_attribute();
 	    s << worldfile.get_value().raw();
 	    s >> tw;
@@ -388,9 +551,9 @@ void World::parseMap ()
     // draw tiles
     int x, y;
     std::vector<int>::iterator pos = tile_textures.begin();
-    for (int j = height-1; j >= 0; --j) {
+    for (int j = map_height-1; j >= 0; --j) {
 	y = th*j;
-	for (int i = 0; i < width; ++i) {
+	for (int i = 0; i < map_width; ++i) {
 	    x = tw*i;
 	    // bind texture
 	    glBindTexture(GL_TEXTURE_2D, texture_list[*pos]->getTexId());

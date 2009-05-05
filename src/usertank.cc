@@ -202,7 +202,7 @@ void UserTank::addFriend()
     world->addRenderable(turret, 2);
     world->addCollidable(turret, 2);
     FriendlyTank::Ptr tank (new FriendlyTank(world, 1, turret,
-                                             Point(512,256), 
+                                             Point(512,512), 
                                              "tank2.xml"));
     world->addRenderable(tank, 1);
     world->addCollidable(tank, 1);
