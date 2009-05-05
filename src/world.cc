@@ -261,6 +261,13 @@ bool World::isCollided (const Point& centre, const float& radius,
 	    return true;
 	}
     }
+    // now check that no boundary vertices are in the polygon
+    for (std::vector<Point>::const_iterator pos = boundary.begin();
+         pos < boundary.end(); ++pos) {
+        if (wrf::pnpoly(vertices, *pos)) {
+            return true;
+        }
+    }
 
     // check all collidables in layer
     for (CollMap::const_iterator pos = collidables.lower_bound(layer);
