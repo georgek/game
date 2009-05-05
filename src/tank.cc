@@ -72,7 +72,9 @@ Tank::Tank(World* world, const int& layer, const Turret::Ptr& turret,
     mouse_y(0),
     turret_rpm(25),
     curr_turret_rpm(0),
-    layer(layer) 
+    layer(layer),
+    health(100),
+    loaded(100)
 {
     // parse input file
     try {
@@ -259,6 +261,11 @@ void Tank::parseInputFile(const std::string& filename)
 
 void Tank::fire()
 {
+    if (loaded < 100) {
+        // not loaded, do nothing
+        return;
+    }
+    
     // find point where mouse is
     int vh = SDL_GetVideoInfo()->current_h;
     Point destination = Point::screen (mouse_x, vh - mouse_y);
@@ -290,6 +297,17 @@ void Tank::fire()
                                     turret->getTurretAngle()));
     World::RendMap::iterator spritepos = world->addRenderable (sprite, 3);
     sprite->run(spritepos);
+
+    // reload
+    loaded = 0;
+}
+
+bool Tank::isLoaded()
+{
+    if (loaded < 100) {
+        return false;
+    }
+    return true;
 }
 
 void Tank::move()
@@ -459,3 +477,14 @@ void Tank::rotate_turret()
     // not collided, set new turret angle
     turret->incTurretAngle(dtheta);
 }
+
+void Tank::reload()
+{
+    if (loaded < 100) {
+        loaded += (timer.get_ticks()/1000.0f)*100;
+    }
+    if (loaded > 100) {
+        loaded = 100;
+    }
+}
+

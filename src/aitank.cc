@@ -110,6 +110,8 @@ void AiTank::update()
     move();
     // rotate turret
     rotate_turret();
+    // reload
+    reload();
 
     // set turret position
     turret->setWorldPos (worldpos);

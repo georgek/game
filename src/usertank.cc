@@ -17,6 +17,7 @@
 
 #include "bullet.h"
 #include "friendlytank.h"
+#include "healthbar.h"
 #include "point.h"
 #include "transform.h"
 #include "turret.h"
@@ -39,10 +40,14 @@ UserTank::UserTank(World* world, const int& layer, const Turret::Ptr& turret,
 UserTank::UserTank(World* world, const int& layer, const Turret::Ptr& turret,
 		   const Point& init_pos,
 		   const std::string& inputfile) :
-    Tank(world, layer, turret, init_pos, inputfile)
+    Tank(world, layer, turret, init_pos, inputfile),
+    health_bar (new HealthBar (Point(0,0)))
 {
     // set world offset
     world->setOffset(init_pos);
+
+    // add healthbar to world
+    world->addRenderable (health_bar, 10);
 }
 
 UserTank::~UserTank () 
@@ -74,9 +79,14 @@ void UserTank::update ()
     move();
     // rotate turret
     rotate_turret();
+    // reload
+    reload();
 
     // set turret position
     turret->setWorldPos (worldpos);
+
+    // update healthbar position
+    health_bar->update(worldpos - world->getOffset(), health, loaded);
 }
 
 void UserTank::update (SDL_Event& event) 
@@ -150,11 +160,10 @@ void UserTank::update (SDL_Event& event)
     if(event.type == SDL_MOUSEBUTTONDOWN) {
 	switch (event.button.button) {
 	case SDL_BUTTON_LEFT:
-            // add a bullet
             fire();
 	    break;
 	case SDL_BUTTON_RIGHT:
-	    std::cout << "Reload!" << std::endl;
+            multiFire();
 	    break;
 	}
     }
@@ -168,6 +177,22 @@ void UserTank::update (SDL_Event& event)
 }
 
 void UserTank::fire()
+{
+    if (this->isLoaded()) {
+        Tank::fire();
+        return;
+    }
+    // make one tank in convoy fire
+    for (ConvoyList::iterator pos = convoy.begin();
+         pos != convoy.end(); ++pos) {
+        if ((*pos)->isLoaded()) {
+            (*pos)->fire();
+            return;
+        }
+    }    
+}
+
+void UserTank::multiFire()
 {
     Tank::fire();
     // make all tanks in convoy fire

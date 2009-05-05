@@ -19,6 +19,7 @@
 #include "collidable.h"
 #include "controllable.h"
 #include "friendlytank.h"
+#include "healthbar.h"
 #include "point.h"
 #include "renderable.h"
 #include "tank.h"
@@ -60,6 +61,7 @@ public:
     void addFriendly(FriendlyTank::Ptr friendly);
 
     virtual void fire();
+    void multiFire();
 
     // convenience typedef
     typedef std::tr1::shared_ptr<UserTank> Ptr;
@@ -71,6 +73,9 @@ private:
     virtual void move();
     virtual void rotate();
     virtual void rotate_turret();
+
+    // health bar
+    HealthBar::Ptr health_bar;
 
     // function to add a friend tank to the map, for testing only
     void addFriend();

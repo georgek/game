@@ -11,6 +11,7 @@
 #include "SDL_opengl.h"
 
 #include "friendlytank.h"
+#include "healthbar.h"
 #include "world.h"
 #include "turret.h"
 #include "point.h"
@@ -37,15 +38,24 @@ FriendlyTank::FriendlyTank (World* world, const int& layer,
                             const std::string& inputfile) :
     AiTank (world, layer, turret, init_pos, inputfile),
     leading_tank(0),
-    is_following(true)
+    is_following(true),
+    health_bar(new HealthBar(Point(0,0)))
 {
     // construct from input file
     destination_pad = 180;
+
+    // add healthbar to world
+    world->addRenderable (health_bar, 10);
 }
 
 FriendlyTank::~FriendlyTank () 
 {
     // destruct stuff
+}
+
+void FriendlyTank::draw()
+{
+    Tank::draw();
 }
 
 void FriendlyTank::update()
@@ -63,6 +73,9 @@ void FriendlyTank::update()
     }
 
     AiTank::update();
+
+    // update healthbar position
+    health_bar->update(worldpos - world->getOffset(), health, loaded);
 }
 
 void FriendlyTank::update(SDL_Event& event)

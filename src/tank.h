@@ -54,6 +54,8 @@ public:
 
     // fire a bullet
     virtual void fire();
+    // check if tank is loaded
+    virtual bool isLoaded();
 
     // convenience typedef
     typedef std::tr1::shared_ptr<Tank> Ptr;
@@ -87,6 +89,8 @@ protected:
     GLuint drawing_list;
     // layer in world
     int layer;
+    // health and reload status
+    float health, loaded;
     
     // timer
     Timer timer;
@@ -100,6 +104,9 @@ protected:
     virtual void move();
     virtual void rotate();
     virtual void rotate_turret();
+
+    // reloads the tank
+    virtual void reload();
 };
 
 #endif /* TANK_H */

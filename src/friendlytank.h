@@ -16,6 +16,7 @@
 #include "aitank.h"
 #include "collidable.h"
 #include "controllable.h"
+#include "healthbar.h"
 #include "renderable.h"
 #include "point.h"
 #include "tank.h"
@@ -37,6 +38,8 @@ public:
                  const std::string& inputfile);
     virtual ~FriendlyTank();
 
+    virtual void draw();
+
     // control functions
     virtual void update();
     virtual void update(SDL_Event& event);
@@ -52,6 +55,8 @@ private:
 
     // sets whether tank is following or not
     bool is_following;
+
+    HealthBar::Ptr health_bar;
     
     virtual void move();
     virtual void rotate();
