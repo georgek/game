@@ -99,6 +99,15 @@ void Bullet::draw()
                                         destination, 7, 20, 1));
         World::RendMap::iterator spritepos = world->addRenderable (sprite, 3);
         sprite->run(spritepos);
+        // create an explosion event
+        SDL_Event event;
+        event.type = SDL_USEREVENT;
+        event.user.code = 1;
+        int* damage = new int (50);
+        Point* location = new Point (destination);
+        event.user.data1 = damage;
+        event.user.data2 = location;
+        SDL_PushEvent(&event);
         // remove self from world
         world->remRenderable(this_bullet);
         return;

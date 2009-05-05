@@ -168,11 +168,24 @@ void UserTank::update (SDL_Event& event)
 	}
     }
 
-    if(event.type == SDL_MOUSEBUTTONUP) {
-	switch (event.button.button) {
-	case SDL_BUTTON_LEFT:
-	    break;
-	}
+    // user events
+    if(event.type == SDL_USEREVENT) {
+        switch (event.user.code) {
+        case 1:
+            int damage = *static_cast<int*>(event.user.data1);
+            Point location = *static_cast<Point*>(event.user.data2);
+            if (worldpos % location < 300) {
+                // do some damage
+                health -= damage*(300.0f-(worldpos%location))/300;
+                std::cout << "Does " << damage*(300.0f-(worldpos%location))/300
+                          << " damage" << std::endl;
+                if (health < 0) {
+                    health = 0;
+                    std::cout << "Dead!" << std::endl;
+                }
+            }
+            break;
+        }
     }
 }
 

@@ -151,6 +151,22 @@ int main (int argc, char* argv[])
 
                 // send event to cursor
                 cursor.update(event);
+
+                // clean up user events...  I cried when I wrote this,
+                // it's terrible, in future I will not use SDL events
+                // for this sort of thing
+                if (event.type == SDL_USEREVENT) {
+                    switch (event.user.code) {
+                    case 1:     // damage, delete int and Point
+                        if (event.user.data1) {
+                            delete static_cast<int*>(event.user.data1);
+                        }
+                        if (event.user.data2) {
+                            delete static_cast<Point*>(event.user.data2);
+                        }
+                        break;
+                    }
+                }
 	    }
 	}
 	// update objects

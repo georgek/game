@@ -33,7 +33,7 @@ void HealthBar::draw()
 
     // container
     if (reload == 100) {
-        glColor4f(0, 0, 0, 0.4);
+        glColor4f(0, 0, 0, 0.2);
         glBegin(GL_QUADS);
         glVertex3f(pos.getDispX()-22, pos.getDispY()+4, 0);
         glVertex3f(pos.getDispX()+22, pos.getDispY()+4, 0);
@@ -42,7 +42,9 @@ void HealthBar::draw()
         glEnd();
     }
     else {
-        glColor4f(0, 0, 0, 0.4);
+        float r = 0.8f-reload/100;
+        float a = 0.4f-reload/500;
+        glColor4f(r, 0, 0, a);
         glBegin(GL_QUADS);
         glVertex3f(pos.getDispX()-22, pos.getDispY()+4, 0);
         glVertex3f(pos.getDispX()+22, pos.getDispY()+4, 0);
@@ -53,8 +55,8 @@ void HealthBar::draw()
 
     // health bar
     // colours
-    float r = 1.0f-health/200;
-    float g = health/100;
+    float r = 2.0f-health/50;
+    float g = health/40 - 0.5f;
 
     glColor4f(r, g, 0, 1);
     glBegin(GL_QUADS);
