@@ -497,16 +497,16 @@ void World::parseMap ()
 		}
 		else if (worldfile.get_name() == "ornament") {
 		    // make ornament
-		    int init_x, init_y, rotation, renderlayer, collidelayer;
-                    //std::string collidelayers;
+		    int init_x, init_y, rotation, renderlayer;
+                    std::string collidelayers;
 		    std::stringstream s;
 		    worldfile.move_to_first_attribute();
 		    std::string file = worldfile.get_value();
 		    worldfile.move_to_next_attribute();
-//		    collidelayers = worldfile.get_value();
-                    s << worldfile.get_value().raw();
-                    s >> collidelayer;
-                    s.str(""); s.clear();
+		    collidelayers = worldfile.get_value();
+                    // s << worldfile.get_value().raw();
+                    // s >> collidelayer;
+                    // s.str(""); s.clear();
                     worldfile.move_to_next_attribute();
                     s << worldfile.get_value().raw();
                     s >> renderlayer;
@@ -532,7 +532,26 @@ void World::parseMap ()
 		    // add to renderable map
 		    renderables.insert(std::make_pair(renderlayer, ornament));
 		    // add to collidable map
-		    collidables.insert(std::make_pair(collidelayer, ornament));
+                    std::string::size_type beg =
+                        collidelayers.find_first_not_of(" ");
+                    std::string::size_type end =
+                        collidelayers.find(" ", beg);
+                    int l;
+                    while (end != std::string::npos) {
+                        s << collidelayers.substr(beg, end);
+                        s >> l;
+                        std::cout << l << std::endl;
+                        s.str(""); s.clear();
+                        collidables.insert(std::make_pair(l, ornament));
+                        collidelayers = collidelayers.substr(end+1);
+                        beg = collidelayers.find_first_not_of(" ");
+                        end = collidelayers.find(" ", beg);
+                    }
+                    s << collidelayers;
+                    s >> l;
+                    std::cout << l << std::endl;
+                    s.str(""); s.clear();
+                    collidables.insert(std::make_pair(l, ornament));
 		}
 	    }
 	}

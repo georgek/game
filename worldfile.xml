@@ -25,11 +25,11 @@
       <t id="0" x="1" /><t id="0" x="1" /><t id="0" x="1" /><t id="0" x="1" />
     </tiles>
     <ornaments>
-      <ornament file="tree.xml" collidelayers="1" renderlayer="5"
+      <ornament file="tree.xml" collidelayers="1 2" renderlayer="5"
                 xpos="1024" ypos="1024" rotation="0" />
-      <ornament file="tree.xml" collidelayers="1" renderlayer="5"
+      <ornament file="tree.xml" collidelayers="1 2" renderlayer="5"
                 xpos="1200" ypos="800" rotation="90" />
-      <ornament file="tree.xml" collidelayers="1" renderlayer="5"
+      <ornament file="tree.xml" collidelayers="1 2" renderlayer="5"
                 xpos="900" ypos="700" rotation="0" />
     </ornaments>
   </map>
