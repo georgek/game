@@ -77,7 +77,7 @@ void AiTank::update()
             xf = std::cos((heading+90) * PI/180.0);
             yf = std::sin((heading+90) * PI/180.0);
         }
-        else if (std::fabs(dtheta) < 30) {
+        else if (std::fabs(dtheta) < 40) {
             // not far to turn, drive and steer
             target_velocity = top_speed/2;
             if (dtheta >= -180 && dtheta < 180) {
