@@ -242,10 +242,10 @@ void World::draw()
     glPopMatrix();
 
     // draw all renderables
-    // TODO: use std::foreach if possible
-    RendMap::iterator pos;
-    for (pos = renderables.begin(); pos != renderables.end(); ++pos) {
-	pos->second->draw();
+    // note iterators may be invalidated after draw is called
+    RendMap::iterator pos = renderables.begin();
+    while (pos != renderables.end()) {
+	(pos++)->second->draw();
     }
 }
 
@@ -287,18 +287,18 @@ bool World::isCollided (const Point& centre, const float& radius,
 void World::update ()
 {
     // update all controllables
-    ConList::iterator pos;
-    for (pos = controllables.begin(); pos != controllables.end(); ++pos) {
-	(*pos)->update();
+    ConList::iterator pos = controllables.begin();
+    while (pos != controllables.end()) {
+	(*(pos++))->update();
     }
 }
 
 void World::update (SDL_Event& event) 
 {
     // update all controllables
-    ConList::iterator pos;
-    for (pos = controllables.begin(); pos != controllables.end(); ++pos) {
-	(*pos)->update(event);
+    ConList::iterator pos = controllables.begin();
+    while (pos != controllables.end()) {
+	(*(pos++))->update(event);
     }
 }
 
@@ -320,19 +320,19 @@ World::ConList::iterator World::addControllable (const Controllable::Ptr& cont)
     return --controllables.end();
 }
 
-void World::remRenderable (const World::RendMap::iterator& pos)
+void World::remRenderable (World::RendMap::iterator& pos)
 {
-    renderables.erase(pos);
+    renderables.erase(pos++);
 }
 
-void World::remCollidable (const World::CollMap::iterator& pos)
+void World::remCollidable (World::CollMap::iterator& pos)
 {
-    collidables.erase(pos);
+    collidables.erase(pos++);
 }
 
-void World::remControllable (const World::ConList::iterator& pos)
+void World::remControllable (World::ConList::iterator& pos)
 {
-    controllables.erase(pos);
+    controllables.erase(pos++);
 }
 
 // utility function for parsing the worldfile

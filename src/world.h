@@ -65,9 +65,9 @@ public:
     ConList::iterator addControllable(const Controllable::Ptr& cont);
 
     // allows other classes to remove from the containers
-    void remRenderable(const RendMap::iterator& pos);
-    void remCollidable(const CollMap::iterator& pos);
-    void remControllable(const ConList::iterator& pos);
+    void remRenderable(RendMap::iterator& pos);
+    void remCollidable(CollMap::iterator& pos);
+    void remControllable(ConList::iterator& pos);
 
 private:
     // the worldfile that this world is made from
