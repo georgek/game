@@ -134,8 +134,6 @@ void AiTank::update(SDL_Event& event)
             if (worldpos % location < 300) {
                 // do some damage
                 health -= damage*(300.0f-(worldpos%location))/300;
-                std::cout << "Does " << damage*(300.0f-(worldpos%location))/300
-                          << " damage" << std::endl;
                 if (health < 0) {
                     health = 0;
                     std::cout << "Dead!" << std::endl;

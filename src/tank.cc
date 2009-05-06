@@ -276,6 +276,10 @@ void Tank::fire()
 
     // adjust for real turret position
     float radius = worldpos % destination;
+    if (radius < 120) {
+        // too this is inside the tank, do not fire
+        return;
+    }
 
     destination = worldpos +
         Point::polarD (radius, turret->getTurretAngle());
