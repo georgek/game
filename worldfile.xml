@@ -25,9 +25,12 @@
       <t id="0" x="1" /><t id="0" x="1" /><t id="0" x="1" /><t id="0" x="1" />
     </tiles>
     <ornaments>
-<!--      <tank bodyfile="tank2.xml" turretfile="turret2.xml" 
-	    bodylayer="1" turretlayer="2" 
-	    xpos="256" ypos="256" /> -->
+      <ornament file="tree.xml" collidelayers="1" renderlayer="5"
+                xpos="1024" ypos="1024" rotation="0" />
+      <ornament file="tree.xml" collidelayers="1" renderlayer="5"
+                xpos="1200" ypos="800" rotation="90" />
+      <ornament file="tree.xml" collidelayers="1" renderlayer="5"
+                xpos="900" ypos="700" rotation="0" />
     </ornaments>
   </map>
   <usertank bodyfile="tank.xml" turretfile="turret.xml" 

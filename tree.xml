@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- tree -->
+<ornament>
+  <texture filename="textures/tree.png" />
+  <!-- the vertices relative to the centre of the texture, the num
+       attribute is included as a convenience only -->
+  <vertices num="4">
+    <v x="23" y="11" />
+    <v x="23" y="-21" />
+    <v x="-7" y="-21" />
+    <v x="-7" y="11" />
+  </vertices>
+  <!-- the radius -->
+  <radius length="32" />
+</ornament>

@@ -19,7 +19,9 @@
 #include "SDL.h"
 #include "SDL_opengl.h"
 
+#include "aitank.h"
 #include "cursor.h"
+#include "ornament.h"
 #include "pnpoly.h"
 #include "point.h"
 #include "tank.h"
@@ -27,7 +29,6 @@
 #include "turret.h"
 #include "usertank.h"
 #include "world.h"
-#include "aitank.h"
 
 World::World (const std::string& inputworldfile) :
     worldfile (inputworldfile.c_str())
@@ -194,10 +195,10 @@ World::World (const std::string& inputworldfile) :
     } while (curr != boundary.front());
 
     // print each vertex for debugging
-    for (std::vector<Point>::iterator pos = boundary.begin();
-         pos != boundary.end(); ++pos) {
-        std::cout << *pos << std::endl;
-    }
+    // for (std::vector<Point>::iterator pos = boundary.begin();
+    //      pos != boundary.end(); ++pos) {
+    //     std::cout << *pos << std::endl;
+    // }
 
     // convert them to world coordinates
     for (std::vector<Point>::iterator pos = boundary.begin();
@@ -206,10 +207,10 @@ World::World (const std::string& inputworldfile) :
         pos->setY((map_height-pos->getY())*th);
     }
 
-    for (std::vector<Point>::iterator pos = boundary.begin();
-         pos != boundary.end(); ++pos) {
-        std::cout << *pos << std::endl;
-    }
+    // for (std::vector<Point>::iterator pos = boundary.begin();
+    //      pos != boundary.end(); ++pos) {
+    //     std::cout << *pos << std::endl;
+    // }
 }
 
 World::~World () 
@@ -419,8 +420,6 @@ void World::parseMap ()
     tile_tangibility.reserve(map_width*map_height);
     // tile dimensions
     Point td (0, 0);
-    // something for ornaments
-
     while (worldfile.read()) {
 	if (worldfile.get_node_type() == xmlpp::TextReader::EndElement) {
 	    // end of of map element
@@ -496,22 +495,22 @@ void World::parseMap ()
 		    xmlpp::TextReader::EndElement) {
 		    break;
 		}
-		else if (worldfile.get_name() == "tank") {
-		    // make tank
-		    int bodylayer, turretlayer, init_x, init_y;
+		else if (worldfile.get_name() == "ornament") {
+		    // make ornament
+		    int init_x, init_y, rotation, renderlayer, collidelayer;
+                    //std::string collidelayers;
 		    std::stringstream s;
 		    worldfile.move_to_first_attribute();
-		    std::string bodyfile = worldfile.get_value();
+		    std::string file = worldfile.get_value();
 		    worldfile.move_to_next_attribute();
-		    std::string turretfile = worldfile.get_value();
-		    worldfile.move_to_next_attribute();
-		    s << worldfile.get_value().raw();
-		    s >> bodylayer;
-		    s.str(""); s.clear();
-		    worldfile.move_to_next_attribute();
-		    s << worldfile.get_value().raw();
-		    s >> turretlayer;
-		    s.str(""); s.clear();
+//		    collidelayers = worldfile.get_value();
+                    s << worldfile.get_value().raw();
+                    s >> collidelayer;
+                    s.str(""); s.clear();
+                    worldfile.move_to_next_attribute();
+                    s << worldfile.get_value().raw();
+                    s >> renderlayer;
+                    s.str(""); s.clear();
 		    worldfile.move_to_next_attribute();
 		    s << worldfile.get_value().raw();
 		    s >> init_x;
@@ -520,24 +519,20 @@ void World::parseMap ()
 		    s << worldfile.get_value().raw();
 		    s >> init_y;
 		    s.str(""); s.clear();
+                    worldfile.move_to_next_attribute();
+                    s << worldfile.get_value().raw();
+                    s >> rotation;
+                    s.str(""); s.clear();
 
-		    // add the turret
-		    Turret::Ptr turret (new Turret(this, Point(init_x, init_y), 
-						   turretfile, turretlayer));
-		    // add to renderable map
-		    renderables.insert(std::make_pair(turretlayer, turret));
-		    // add to collidable map
-		    collidables.insert(std::make_pair(turretlayer, turret));
-    
-		    // add tank
-		    Tank::Ptr tank (new Tank(this, bodylayer, turret, 
-						     Point(init_x, init_y), 
-						     bodyfile));
+		    // make an ornament
+		    Ornament::Ptr ornament (new Ornament(this,
+                                                         Point(init_x, init_y),
+                                                         file, rotation));
 
 		    // add to renderable map
-		    renderables.insert(std::make_pair(bodylayer, tank));
+		    renderables.insert(std::make_pair(renderlayer, ornament));
 		    // add to collidable map
-		    collidables.insert(std::make_pair(bodylayer, tank));
+		    collidables.insert(std::make_pair(collidelayer, ornament));
 		}
 	    }
 	}
