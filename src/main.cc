@@ -4,6 +4,8 @@
  */
 
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -99,6 +101,9 @@ int main (int argc, char* argv[])
 
     // end of argument parsing
 
+    // initialise random seed
+    std::srand(std::time(0));
+
     // initialise SDL and OpenGL
     if (!init(width, height)) {
 	return 1;
@@ -163,6 +168,11 @@ int main (int argc, char* argv[])
                         }
                         if (event.user.data2) {
                             delete static_cast<Point*>(event.user.data2);
+                        }
+                        break;
+                    case 2:     // user position, delete Point
+                        if (event.user.data1) {
+                            delete static_cast<Point*>(event.user.data1);
                         }
                         break;
                     }

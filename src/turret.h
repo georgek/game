@@ -50,6 +50,9 @@ public:
     // checks whether the turret will collide in a new position
     bool isCollided (const Point& new_worldpos, const float& angle_inc) const;
 
+    // turret dies
+    void die();
+
     // convenience typedef
     typedef std::tr1::shared_ptr<Turret> Ptr;
 

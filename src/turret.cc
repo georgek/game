@@ -172,6 +172,15 @@ bool Turret::isCollided (const Point& new_worldpos,
     return false;
 }
 
+void Turret::die()
+{
+    // change texture
+    texture = Texture ("textures/deadturret.png", Texture::automatic);
+    // remake drawing list
+    glDeleteLists(drawing_list, 1);
+    makeDrawingList();
+}
+
 void Turret::makeDrawingList() 
 {
     // calculate texture vertices

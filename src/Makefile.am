@@ -6,7 +6,7 @@ game_SOURCES = main.cc collidable.h controllable.h point.h point.cc	\
 	world.cc pnpoly.h pnpoly.cc transform.h transform.cc		\
 	friendlytank.h friendlytank.cc aitank.h aitank.cc bullet.h	\
 	bullet.cc sprite.h sprite.cc cursor.h cursor.cc healthbar.h	\
-	healthbar.cc ornament.h ornament.cc
+	healthbar.cc ornament.h ornament.cc enemytank.h enemytank.cc
 
 EXTRA_DIST = tools/shared_ptr.h
 

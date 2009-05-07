@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- reference enemy tank input file -->
+<tank accn="540" dccn="360" topspeed="200" rpm="18">
+  <texture filename="textures/tankbodyenemy.png" />
+  <!-- the vertices relative to the centre of the texture, the num
+       attribute is included as a convenience only -->
+  <vertices num="4">
+    <v x="35" y="75" />
+    <v x="35" y="-75" />
+    <v x="-35" y="-75" />
+    <v x="-35" y="75" />
+  </vertices>
+  <!-- the radius -->
+  <radius length="83" />
+</tank>

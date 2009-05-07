@@ -21,6 +21,7 @@
 
 #include "aitank.h"
 #include "cursor.h"
+#include "enemytank.h"
 #include "ornament.h"
 #include "pnpoly.h"
 #include "point.h"
@@ -394,6 +395,56 @@ void World::parseWorldFile ()
 	    }
 	    else if (worldfile.get_name() == "enemies") {
 		// parse enemies here
+                while (worldfile.read()) {
+                    if (worldfile.get_node_type() == 
+                        xmlpp::TextReader::EndElement) {
+                        break;
+                    }
+                    else if (worldfile.get_name() == "tank") {
+                        int bodylayer, turretlayer, init_x, init_y;
+                        std::stringstream s;
+                        worldfile.move_to_first_attribute();
+                        std::string bodyfile = worldfile.get_value();
+                        worldfile.move_to_next_attribute();
+                        std::string turretfile = worldfile.get_value();
+                        worldfile.move_to_next_attribute();
+                        s << worldfile.get_value().raw();
+                        s >> bodylayer;
+                        s.str(""); s.clear();
+                        worldfile.move_to_next_attribute();
+                        s << worldfile.get_value().raw();
+                        s >> turretlayer;
+                        s.str(""); s.clear();
+                        worldfile.move_to_next_attribute();
+                        s << worldfile.get_value().raw();
+                        s >> init_x;
+                        s.str(""); s.clear();
+                        worldfile.move_to_next_attribute();
+                        s << worldfile.get_value().raw();
+                        s >> init_y;
+                        s.str(""); s.clear();
+
+                        // add the turret
+                        Turret::Ptr turret (new Turret(this, Point(init_x, init_y), 
+                                                       turretfile, turretlayer));
+                        // add to renderable map
+                        renderables.insert(std::make_pair(turretlayer, turret));
+                        // add to collidable map
+                        collidables.insert(std::make_pair(turretlayer, turret));
+    
+                        // add tank
+                        EnemyTank::Ptr tank (new EnemyTank(this, bodylayer, turret, 
+                                                           Point(init_x, init_y), 
+                                                           bodyfile));
+                
+                        // add to renderable map
+                        renderables.insert(std::make_pair(bodylayer, tank));
+                        // add to collidable map
+                        collidables.insert(std::make_pair(bodylayer, tank));
+                        // add to controllable vector
+                        controllables.push_back(tank);
+                    }
+                }
 	    }
 	}
     }

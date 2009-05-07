@@ -10,6 +10,7 @@
 #ifndef AITANK_H
 #define AITANK_H
 
+#include <stack>
 #include <string>
 
 #include "SDL.h"
@@ -53,10 +54,12 @@ protected:
     virtual void rotate();
     virtual void rotate_turret();
 
-    // location that the tank wants to be at
+    // where we want to be
     Point destination;
     // distance from destination to aim for
     float destination_pad;
+    // tank should not move when it is inactive
+    bool active;
 };
 
 #endif // AITANK_H

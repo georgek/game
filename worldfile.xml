@@ -27,16 +27,18 @@
     <ornaments>
       <ornament file="tree.xml" collidelayers="1 2" renderlayer="5"
                 xpos="1024" ypos="1024" rotation="0" />
+      <ornament file="tree2.xml" collidelayers="1 2" renderlayer="5"
+                xpos="1200" ypos="800" rotation="0" />
       <ornament file="tree.xml" collidelayers="1 2" renderlayer="5"
-                xpos="1200" ypos="800" rotation="90" />
-      <ornament file="tree.xml" collidelayers="1 2" renderlayer="5"
-                xpos="900" ypos="700" rotation="0" />
+                xpos="900" ypos="700" rotation="90" />
     </ornaments>
   </map>
   <usertank bodyfile="tank.xml" turretfile="turret.xml" 
 	    bodylayer="1" turretlayer="2" 
 	    xpos="512" ypos="768" />
   <enemies>
-    <tank bodytex="body2.png" turrettex="turret2.png" />
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="1536" ypos="1024" />
   </enemies>
 </world>

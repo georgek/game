@@ -73,8 +73,10 @@ Tank::Tank(World* world, const int& layer, const Turret::Ptr& turret,
     turret_rpm(25),
     curr_turret_rpm(0),
     layer(layer),
-    health(100),
-    loaded(100)
+    curr_health(100),
+    max_health(100),
+    loaded(100),
+    alive (true)
 {
     // parse input file
     try {
@@ -490,5 +492,19 @@ void Tank::reload()
     if (loaded > 100) {
         loaded = 100;
     }
+}
+
+void Tank::die()
+{
+    alive = false;
+    
+    // change texture
+    texture = Texture ("textures/deadtank.png", Texture::automatic);
+    // remake drawing list
+    glDeleteLists(drawing_list, 1);
+    makeDrawingList();
+
+    // make turret die
+    turret->die();
 }
 

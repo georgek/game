@@ -46,6 +46,8 @@ FriendlyTank::FriendlyTank (World* world, const int& layer,
 
     // add healthbar to world
     world->addRenderable (health_bar, 10);
+
+    active = true;
 }
 
 FriendlyTank::~FriendlyTank () 
@@ -60,6 +62,13 @@ void FriendlyTank::draw()
 
 void FriendlyTank::update()
 {
+    // update healthbar position
+    health_bar->update(worldpos - world->getOffset(), curr_health, loaded);
+
+    if (!alive) {
+        return;
+    }
+    
     if (!leading_tank) {
         // no tank to follow
         AiTank::update();
@@ -73,13 +82,14 @@ void FriendlyTank::update()
     }
 
     AiTank::update();
-
-    // update healthbar position
-    health_bar->update(worldpos - world->getOffset(), health, loaded);
 }
 
 void FriendlyTank::update(SDL_Event& event)
 {
+    if (!alive) {
+        return;
+    }
+    
     // respond to F key to make it start/stop following
     if (event.type == SDL_KEYUP) {
 	switch (event.key.keysym.sym) {

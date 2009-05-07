@@ -13,9 +13,10 @@
 #include "healthbar.h"
 
 HealthBar::HealthBar (const Point& init_pos, const int& init_health,
-                      const int& init_reload) :
+                      const int& max_health, const int& init_reload) :
     screenpos (init_pos),
-    health (init_health),
+    curr_health (init_health),
+    max_health (max_health),
     reload (init_reload)
 {
     // construct
@@ -55,14 +56,14 @@ void HealthBar::draw()
 
     // health bar
     // colours
-    float r = 2.0f-health/50;
-    float g = health/40 - 0.5f;
+    float r = 2.0f-curr_health/(max_health*0.5);
+    float g = curr_health/(max_health*0.4) - 0.5f;
 
     glColor4f(r, g, 0, 1);
     glBegin(GL_QUADS);
     glVertex3f(pos.getDispX()-19, pos.getDispY()+1, 0);
-    glVertex3f(pos.getDispX()+38*health/100-19, pos.getDispY()+1, 0);
-    glVertex3f(pos.getDispX()+38*health/100-19, pos.getDispY()-1, 0);
+    glVertex3f(pos.getDispX()+38*curr_health/max_health-19, pos.getDispY()+1, 0);
+    glVertex3f(pos.getDispX()+38*curr_health/max_health-19, pos.getDispY()-1, 0);
     glVertex3f(pos.getDispX()-19, pos.getDispY()-1, 0);
     glEnd();
 
@@ -81,7 +82,7 @@ void HealthBar::draw()
 void HealthBar::update(const Point& pos, const int& health, const int& reload)
 {
     screenpos = pos;
-    this->health = health;
+    this->curr_health = health;
     this->reload = reload;
 }
 

@@ -38,7 +38,8 @@ AiTank::AiTank (World* world, const int& layer,
                 const std::string& inputfile) :
     Tank (world, layer, turret, init_pos, inputfile),
     destination (init_pos),
-    destination_pad(0)
+    destination_pad(0),
+    active(false)
 {
     // construct from input file
 }
@@ -55,29 +56,50 @@ void AiTank::draw()
 
 void AiTank::update()
 {
+    // if dead, do nothing
+    if (!alive) {
+        return;
+    }
+
+    // if inactive, do nothing
+    if (!active) {
+        return;
+    }
+    
     // find out how much tank will move after stopping
     float decc_distance = ((top_speed * top_speed)/dccn)/2;
     // find out how far tank can rotate in one tick
     float tick_angle = (rpm*timer.get_ticks())/(60000.0f/360.0f);
-
+    // find angle to destination
+    float dest_heading = worldpos / destination;
+    float dtheta = dest_heading - heading;
     // set current speed etc. so it can get to the destination
     if (worldpos % destination > decc_distance + destination_pad) {
         // move to destination
-        // find angle to destination
-        float dest_heading = worldpos / destination;
-
         // decide how much we need to move
-        float dtheta = dest_heading - heading;
-        if (std::fabs(dtheta) < tick_angle) {
+        if (std::fabs(dtheta) < tick_angle*2) {
             // pretty much facing the right direction
             target_velocity = top_speed;
-            heading = dest_heading;
+            // check for collisions
+            // work out new vertices
+            std::vector<Point> new_vertices;
+            // transform the vertices using the transform functor
+            std::transform(vertices.begin(), vertices.end(), // source
+                           std::back_inserter(new_vertices), // destination
+                           Transform(worldpos, dest_heading));
+
+            // check for collisions
+            if (!world->isCollided(worldpos, radius,
+                                   new_vertices, layer, this)) {
+                // it hasn't collided
+                heading = dest_heading;
+            }
             curr_rpm = 0;
             // calculate new x and y factors for movement
             xf = std::cos((heading+90) * PI/180.0);
             yf = std::sin((heading+90) * PI/180.0);
         }
-        else if (std::fabs(dtheta) < 40) {
+        else if (std::fabs(dtheta) < 40 || std::fabs(dtheta) > 320) {
             // not far to turn, drive and steer
             target_velocity = top_speed/2;
             if (dtheta >= -180 && dtheta < 180) {
@@ -96,6 +118,15 @@ void AiTank::update()
             else {
                 curr_rpm = dtheta>0 ? -rpm : rpm;
             }
+        }
+    }
+    else if (worldpos % destination < radius*2.1) {
+        // too close, move away
+        if ((std::fabs(dtheta) < 20 || std::fabs(dtheta) > 340)) {
+            target_velocity = -top_speed;
+        }
+        else if ((std::fabs(dtheta) > 90 && std::fabs(dtheta) < 270)) {
+            target_velocity = top_speed;
         }
     }
     else {
@@ -119,6 +150,10 @@ void AiTank::update()
 
 void AiTank::update(SDL_Event& event)
 {
+    if (!alive) {
+        return;
+    }
+    
     // mouse movement
     if (event.type == SDL_MOUSEMOTION) {
 	mouse_x = event.motion.x;
@@ -133,10 +168,10 @@ void AiTank::update(SDL_Event& event)
             Point location = *static_cast<Point*>(event.user.data2);
             if (worldpos % location < 300) {
                 // do some damage
-                health -= damage*(300.0f-(worldpos%location))/300;
-                if (health < 0) {
-                    health = 0;
-                    std::cout << "Dead!" << std::endl;
+                curr_health -= damage*(300.0f-(worldpos%location))/300;
+                if (curr_health < 0) {
+                    curr_health = 0;
+                    die();
                 }
             }
             break;

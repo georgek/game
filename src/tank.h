@@ -90,7 +90,9 @@ protected:
     // layer in world
     int layer;
     // health and reload status
-    float health, loaded;
+    float curr_health, max_health, loaded;
+    // false if tank has been destroyed
+    bool alive;
     
     // timer
     Timer timer;
@@ -107,6 +109,9 @@ protected:
 
     // reloads the tank
     virtual void reload();
+
+    // tank dies
+    virtual void die();
 };
 
 #endif /* TANK_H */

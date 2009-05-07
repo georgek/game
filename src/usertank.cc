@@ -41,10 +41,13 @@ UserTank::UserTank(World* world, const int& layer, const Turret::Ptr& turret,
 		   const Point& init_pos,
 		   const std::string& inputfile) :
     Tank(world, layer, turret, init_pos, inputfile),
-    health_bar (new HealthBar (Point(0,0)))
+    health_bar (new HealthBar (Point(0,0), 400, 400))
 {
     // set world offset
     world->setOffset(init_pos);
+
+    // user tank has more health
+    curr_health = max_health = 400;
 
     // add healthbar to world
     world->addRenderable (health_bar, 10);
@@ -73,6 +76,13 @@ bool UserTank::isCollidedV(const std::vector<Point>& vertices) const
 
 void UserTank::update ()
 {
+    // update healthbar position
+    health_bar->update(worldpos - world->getOffset(), curr_health, loaded);
+
+    if (!alive) {
+        return;
+    }
+    
     // rotate tank
     rotate();
     // move tank
@@ -85,12 +95,21 @@ void UserTank::update ()
     // set turret position
     turret->setWorldPos (worldpos);
 
-    // update healthbar position
-    health_bar->update(worldpos - world->getOffset(), health, loaded);
+    // push an event with the new position
+    SDL_Event event;
+    event.type = SDL_USEREVENT;
+    event.user.code = 2;
+    Point* pos = new Point (worldpos);
+    event.user.data1 = pos;
+    SDL_PushEvent(&event);
 }
 
 void UserTank::update (SDL_Event& event) 
 {
+    if (!alive) {
+        return;
+    }
+    
     // respond to WASD keys
     // W and S keys make it accelerate forwards and backwards
     // D steers right and A steers left, to simulate a tank's
@@ -176,10 +195,10 @@ void UserTank::update (SDL_Event& event)
             Point location = *static_cast<Point*>(event.user.data2);
             if (worldpos % location < 300) {
                 // do some damage
-                health -= damage*(300.0f-(worldpos%location))/300;
-                if (health < 0) {
-                    health = 0;
-                    std::cout << "Dead!" << std::endl;
+                curr_health -= damage*(300.0f-(worldpos%location))/300;
+                if (curr_health < 0) {
+                    curr_health = 0;
+                    die();
                 }
             }
             break;
@@ -233,7 +252,7 @@ void UserTank::rotate_turret()
 
 void UserTank::addFriend()
 {
-    Turret::Ptr turret (new Turret(world, Point(512,256), 
+    Turret::Ptr turret (new Turret(world, Point(512,512), 
                                    "turret2.xml", 2));
     world->addRenderable(turret, 2);
     world->addCollidable(turret, 2);
