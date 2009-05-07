@@ -22,19 +22,21 @@
 const double PI = 4.0*std::atan(1.0);
 
 EnemyTank::EnemyTank(World* world, const int& layer, const Turret::Ptr& turret,
-                     const std::string& texturename,
-                     const Point& init_pos,
-                     const int& engine_force, const int& mass, const int& rpm) :
+                     const std::string& texturename, const Point& init_pos,
+                     const int& engine_force, const int& mass, const int& rpm,
+                     const int& id) :
     AiTank (world, layer, turret, texturename, init_pos, engine_force,
-            mass, rpm)
+            mass, rpm),
+    id (id)
 {
     // construct stuff
 }
 
 EnemyTank::EnemyTank(World* world, const int& layer, const Turret::Ptr& turret,
-                     const Point& init_pos,
-                     const std::string& inputfile) :
-    AiTank (world, layer, turret, init_pos, inputfile)
+                     const Point& init_pos, const std::string& inputfile,
+                     const int& id) :
+    AiTank (world, layer, turret, init_pos, inputfile),
+    id (id)
 {
     destination_pad = 600;
 
@@ -243,5 +245,17 @@ void EnemyTank::fire()
 
     // reload
     loaded = 0;
+}
+
+void EnemyTank::die()
+{
+    // send signal to free captured friendlies
+    SDL_Event event;
+    event.type = SDL_USEREVENT;
+    event.user.code = 3;
+    int* my_id = new int (id);
+    event.user.data1 = my_id;
+    SDL_PushEvent(&event);
+    AiTank::die();
 }
 

@@ -308,12 +308,17 @@ void Tank::fire()
     loaded = 0;
 }
 
-bool Tank::isLoaded()
+bool Tank::isLoaded() const
 {
     if (loaded < 100) {
         return false;
     }
     return true;
+}
+
+bool Tank::isAlive() const
+{
+    return alive;
 }
 
 void Tank::move()

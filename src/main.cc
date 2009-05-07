@@ -175,6 +175,11 @@ int main (int argc, char* argv[])
                             delete static_cast<Point*>(event.user.data1);
                         }
                         break;
+                    case 3:     // enemy dead, delete int
+                        if (event.user.data1) {
+                            delete static_cast<int*>(event.user.data1);
+                        }
+                        break;
                     }
                 }
 	    }

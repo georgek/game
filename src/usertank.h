@@ -57,8 +57,8 @@ public:
     virtual void update();
     virtual void update(SDL_Event& event);
 
-    // add a friendly tank to the convoy
-    void addFriendly(FriendlyTank::Ptr friendly);
+    // add a friendly tank to the friendlies list
+    void addFriendly(const FriendlyTank::Ptr& friendly);
 
     virtual void fire();
     void multiFire();
@@ -68,7 +68,10 @@ public:
 
 private:
     typedef std::list<FriendlyTank::Ptr> ConvoyList;
+    // the current following tanks
     ConvoyList convoy;
+    // friendlies in the field, that aren't in the convoy
+    ConvoyList friendlies;
 
     virtual void move();
     virtual void rotate();

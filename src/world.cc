@@ -22,6 +22,7 @@
 #include "aitank.h"
 #include "cursor.h"
 #include "enemytank.h"
+#include "friendlytank.h"
 #include "ornament.h"
 #include "pnpoly.h"
 #include "point.h"
@@ -340,6 +341,9 @@ void World::remControllable (World::ConList::iterator& pos)
 // utility function for parsing the worldfile
 void World::parseWorldFile () 
 {
+    // pointer to user tank which will be needed later
+    UserTank::Ptr user_tank;
+
     // iterate over file
     while (worldfile.read()) {
 	// if it is an Element (not an EndElement)
@@ -382,16 +386,17 @@ void World::parseWorldFile ()
 		collidables.insert(std::make_pair(turretlayer, turret));
     
 		// add tank
-		UserTank::Ptr tank (new UserTank(this, bodylayer, turret, 
-						 Point(init_x, init_y), 
-						 bodyfile));
+		user_tank =
+                    UserTank::Ptr(new UserTank(this, bodylayer, turret,
+                                               Point(init_x, init_y),
+                                               bodyfile));
                 
 		// add to renderable map
-		renderables.insert(std::make_pair(bodylayer, tank));
+		renderables.insert(std::make_pair(bodylayer, user_tank));
 		// add to collidable map
-		collidables.insert(std::make_pair(bodylayer, tank));
+		collidables.insert(std::make_pair(bodylayer, user_tank));
 		// add to controllable vector
-		controllables.push_back(tank);
+		controllables.push_back(user_tank);
 	    }
 	    else if (worldfile.get_name() == "enemies") {
 		// parse enemies here
@@ -401,7 +406,7 @@ void World::parseWorldFile ()
                         break;
                     }
                     else if (worldfile.get_name() == "tank") {
-                        int bodylayer, turretlayer, init_x, init_y;
+                        int bodylayer, turretlayer, init_x, init_y, id;
                         std::stringstream s;
                         worldfile.move_to_first_attribute();
                         std::string bodyfile = worldfile.get_value();
@@ -423,6 +428,10 @@ void World::parseWorldFile ()
                         s << worldfile.get_value().raw();
                         s >> init_y;
                         s.str(""); s.clear();
+                        worldfile.move_to_next_attribute();
+                        s << worldfile.get_value().raw();
+                        s >> id;
+                        s.str(""); s.clear();
 
                         // add the turret
                         Turret::Ptr turret (new Turret(this, Point(init_x, init_y), 
@@ -435,7 +444,7 @@ void World::parseWorldFile ()
                         // add tank
                         EnemyTank::Ptr tank (new EnemyTank(this, bodylayer, turret, 
                                                            Point(init_x, init_y), 
-                                                           bodyfile));
+                                                           bodyfile, id));
                 
                         // add to renderable map
                         renderables.insert(std::make_pair(bodylayer, tank));
@@ -446,6 +455,93 @@ void World::parseWorldFile ()
                     }
                 }
 	    }
+            else if (worldfile.get_name() == "friends") {
+                // parse friends here
+                while (worldfile.read()) {
+                    if (worldfile.get_node_type() == 
+                        xmlpp::TextReader::EndElement) {
+                        break;
+                    }
+                    else if (worldfile.get_name() == "tank") {
+                        int bodylayer, turretlayer, init_x, init_y;
+                        std::string captorlist;
+                        std::list<int> captors;
+                        std::stringstream s;
+                        worldfile.move_to_first_attribute();
+                        std::string bodyfile = worldfile.get_value();
+                        worldfile.move_to_next_attribute();
+                        std::string turretfile = worldfile.get_value();
+                        worldfile.move_to_next_attribute();
+                        s << worldfile.get_value().raw();
+                        s >> bodylayer;
+                        s.str(""); s.clear();
+                        worldfile.move_to_next_attribute();
+                        s << worldfile.get_value().raw();
+                        s >> turretlayer;
+                        s.str(""); s.clear();
+                        worldfile.move_to_next_attribute();
+                        s << worldfile.get_value().raw();
+                        s >> init_x;
+                        s.str(""); s.clear();
+                        worldfile.move_to_next_attribute();
+                        s << worldfile.get_value().raw();
+                        s >> init_y;
+                        s.str(""); s.clear();
+                        worldfile.move_to_next_attribute();
+                        captorlist = worldfile.get_value();
+
+                        // fill captor list
+                        std::string::size_type beg =
+                            captorlist.find_first_not_of(" ");
+                        std::string::size_type end =
+                            captorlist.find(" ", beg);
+                        int l;
+                        while (end != std::string::npos) {
+                            s << captorlist.substr(beg, end);
+                            s >> l;
+                            s.str(""); s.clear();
+                            captors.push_back(l);
+                            captorlist = captorlist.substr(end+1);
+                            beg = captorlist.find_first_not_of(" ");
+                            end = captorlist.find(" ", beg);
+                        }
+                        s << captorlist;
+                        s >> l;
+                        s.str(""); s.clear();
+                        captors.push_back(l);
+
+                        // add the turret
+                        Turret::Ptr turret (new Turret(this, Point(init_x, init_y), 
+                                                       turretfile, turretlayer));
+                        // add to renderable map
+                        renderables.insert(std::make_pair(turretlayer, turret));
+                        // add to collidable map
+                        collidables.insert(std::make_pair(turretlayer, turret));
+    
+                        // add tank
+                        FriendlyTank::Ptr tank
+                            (new FriendlyTank(this, bodylayer, turret, 
+                                              Point(init_x, init_y), 
+                                              bodyfile, captors));
+                
+                        // add to renderable map
+                        renderables.insert(std::make_pair(bodylayer, tank));
+                        // add to collidable map
+                        collidables.insert(std::make_pair(bodylayer, tank));
+                        // add to controllable vector
+                        controllables.push_back(tank);
+
+                        // add to user tank friend list
+                        if (user_tank.get() != 0) {
+                            user_tank->addFriendly(tank);
+                        }
+                        else {
+                            std::cout << "Error: friendly tank declared before "
+                                "user tank in worldfile!" << std::endl;
+                        }
+                    }
+                }
+            }
 	}
     }
 }
@@ -555,9 +651,6 @@ void World::parseMap ()
 		    std::string file = worldfile.get_value();
 		    worldfile.move_to_next_attribute();
 		    collidelayers = worldfile.get_value();
-                    // s << worldfile.get_value().raw();
-                    // s >> collidelayer;
-                    // s.str(""); s.clear();
                     worldfile.move_to_next_attribute();
                     s << worldfile.get_value().raw();
                     s >> renderlayer;
@@ -591,7 +684,6 @@ void World::parseMap ()
                     while (end != std::string::npos) {
                         s << collidelayers.substr(beg, end);
                         s >> l;
-                        std::cout << l << std::endl;
                         s.str(""); s.clear();
                         collidables.insert(std::make_pair(l, ornament));
                         collidelayers = collidelayers.substr(end+1);
@@ -600,7 +692,6 @@ void World::parseMap ()
                     }
                     s << collidelayers;
                     s >> l;
-                    std::cout << l << std::endl;
                     s.str(""); s.clear();
                     collidables.insert(std::make_pair(l, ornament));
 		}

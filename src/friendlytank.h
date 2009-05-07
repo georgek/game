@@ -8,6 +8,7 @@
 #ifndef FRIENDLYTANK_H
 #define FRIENDLYTANK_H
 
+#include <list>
 #include <string>
 
 #include "SDL.h"
@@ -29,13 +30,13 @@ class FriendlyTank : public AiTank
 public:
     // basic constructor
     FriendlyTank(World* world, const int& layer, const Turret::Ptr& turret,
-                 const std::string& texturename,
-                 const Point& init_pos,
-                 const int& engine_force, const int& mass, const int& rpm);
+                 const std::string& texturename, const Point& init_pos,
+                 const int& engine_force, const int& mass, const int& rpm,
+                 std::list<int>& captors);
     // from input file
     FriendlyTank(World* world, const int& layer, const Turret::Ptr& turret,
-                 const Point& init_pos,
-                 const std::string& inputfile);
+                 const Point& init_pos, const std::string& inputfile,
+                 std::list<int>& captors);
     virtual ~FriendlyTank();
 
     virtual void draw();
@@ -57,6 +58,9 @@ private:
     bool is_following;
 
     HealthBar::Ptr health_bar;
+
+    // list of captors, these are ids of enemies
+    std::list<int> captors;
     
     virtual void move();
     virtual void rotate();

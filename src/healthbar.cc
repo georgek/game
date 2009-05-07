@@ -29,6 +29,10 @@ HealthBar::~HealthBar()
 
 void HealthBar::draw()
 {
+    if (curr_health == 0) {
+        return;
+    }
+    
     // offset position
     Point pos = screenpos + Point(0, -60);
 

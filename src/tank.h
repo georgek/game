@@ -55,7 +55,9 @@ public:
     // fire a bullet
     virtual void fire();
     // check if tank is loaded
-    virtual bool isLoaded();
+    virtual bool isLoaded() const;
+    // check if tank is alive
+    virtual bool isAlive() const;
 
     // convenience typedef
     typedef std::tr1::shared_ptr<Tank> Ptr;

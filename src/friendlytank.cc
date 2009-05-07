@@ -5,6 +5,8 @@
 
 // implementation of friendly tank class
 
+#include <algorithm>
+#include <list>
 #include <string>
 
 #include "SDL.h"
@@ -22,7 +24,7 @@ FriendlyTank::FriendlyTank (World* world, const int& layer,
                             const std::string& texturename,
                             const Point& init_pos,
                             const int& engine_force, const int& mass,
-                            const int& rpm) :
+                            const int& rpm, std::list<int>& captors) :
     AiTank (world, layer, turret, texturename, init_pos, engine_force,
           mass, rpm),
     leading_tank(0),
@@ -30,12 +32,16 @@ FriendlyTank::FriendlyTank (World* world, const int& layer,
 {
     // construct stuff
     destination_pad = 180;
+
+    // move items from captor list into this class's list
+    this->captors.splice(this->captors.end(), captors);
 }
 
 FriendlyTank::FriendlyTank (World* world, const int& layer, 
                             const Turret::Ptr& turret,
                             const Point& init_pos,
-                            const std::string& inputfile) :
+                            const std::string& inputfile,
+                            std::list<int>& captors) :
     AiTank (world, layer, turret, init_pos, inputfile),
     leading_tank(0),
     is_following(true),
@@ -47,7 +53,10 @@ FriendlyTank::FriendlyTank (World* world, const int& layer,
     // add healthbar to world
     world->addRenderable (health_bar, 10);
 
-    active = true;
+    active = false;
+
+    // move items from captor list into this class's list
+    this->captors.splice(this->captors.end(), captors);
 }
 
 FriendlyTank::~FriendlyTank () 
@@ -86,7 +95,33 @@ void FriendlyTank::update()
 
 void FriendlyTank::update(SDL_Event& event)
 {
+    // user events
+    if(event.type == SDL_USEREVENT) {
+        switch (event.user.code) {
+        case 3:                 // enemy dead
+            int enemy_id = *static_cast<int*>(event.user.data1);
+            std::cout << "Enemy dead: " << enemy_id << std::endl;
+            // check if this enemy is in the captor list
+            std::list<int>::iterator pos =
+                std::find(captors.begin(), captors.end(), enemy_id);
+            if (pos != captors.end()) {
+                // it is in the list, so remove it
+                captors.erase(pos);
+            }
+            if (captors.empty()) {
+                // all captors dead, so I am free
+                active = true;
+                std::cout << "I am free!" << std::endl;
+            }
+            break;
+        }
+    }
+
     if (!alive) {
+        return;
+    }
+
+    if (!active) {
         return;
     }
     
@@ -101,6 +136,7 @@ void FriendlyTank::update(SDL_Event& event)
 	    break;
 	}
     }
+
     AiTank::update(event);
 }
 

@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <list>
 #include <string>
 #include <tr1/memory>
 #include <vector>
@@ -99,9 +100,41 @@ void UserTank::update ()
     SDL_Event event;
     event.type = SDL_USEREVENT;
     event.user.code = 2;
-    Point* pos = new Point (worldpos);
-    event.user.data1 = pos;
+    Point* posi = new Point (worldpos);
+    event.user.data1 = posi;
     SDL_PushEvent(&event);
+
+    // check to see if any friendlies have become active
+    ConvoyList::iterator pos = friendlies.begin();
+    while (pos != friendlies.end()) {
+        if ((*pos)->isActive()) {
+            // this one has become active
+            // follow tank at end of convoy, or this user tank
+            if (!convoy.empty()) {
+                (*pos)->follow (convoy.back().get());
+            }
+            else {
+                (*pos)->follow (this);
+            }
+            // move it to convoy list
+            convoy.splice(convoy.end(), friendlies, pos++);
+            
+        }
+        else {
+            ++pos;
+        }
+    }
+    // check to see if any friendlies in the convoy have died
+    pos = convoy.begin();
+    while (pos != convoy.end()) {
+        if (!(*pos)->isAlive()) {
+            // it has died, remove from convoy
+            convoy.erase(pos++);
+        }
+        else {
+            ++pos;
+        }
+    }
 }
 
 void UserTank::update (SDL_Event& event) 
@@ -190,7 +223,8 @@ void UserTank::update (SDL_Event& event)
     // user events
     if(event.type == SDL_USEREVENT) {
         switch (event.user.code) {
-        case 1:
+        case 1: 
+        {
             int damage = *static_cast<int*>(event.user.data1);
             Point location = *static_cast<Point*>(event.user.data2);
             if (worldpos % location < 300) {
@@ -203,7 +237,21 @@ void UserTank::update (SDL_Event& event)
             }
             break;
         }
+        case 3:                 // enemy dead, get some health
+        {
+            curr_health += 50;
+            if (curr_health > max_health) {
+                curr_health = max_health;
+            }
+            break;
+        }
+        }
     }
+}
+
+void UserTank::addFriendly(const FriendlyTank::Ptr& friendly)
+{
+    friendlies.push_back(friendly);
 }
 
 void UserTank::fire()
@@ -256,9 +304,13 @@ void UserTank::addFriend()
                                    "turret2.xml", 2));
     world->addRenderable(turret, 2);
     world->addCollidable(turret, 2);
+    std::list<int> captors;
+    captors.push_back(0);
+    captors.push_back(1);
     FriendlyTank::Ptr tank (new FriendlyTank(world, 1, turret,
                                              Point(512,512), 
-                                             "tank2.xml"));
+                                             "tank2.xml",
+                                             captors));
     world->addRenderable(tank, 1);
     world->addCollidable(tank, 1);
     world->addControllable(tank);

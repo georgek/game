@@ -46,6 +46,8 @@ public:
     virtual void update();
     virtual void update(SDL_Event& event);
 
+    bool isActive() const;
+
     // convenience typedef
     typedef std::tr1::shared_ptr<AiTank> Ptr;
 

@@ -153,6 +153,10 @@ void AiTank::update(SDL_Event& event)
     if (!alive) {
         return;
     }
+
+    if (!active) {
+        return;
+    }
     
     // mouse movement
     if (event.type == SDL_MOUSEMOTION) {
@@ -177,6 +181,11 @@ void AiTank::update(SDL_Event& event)
             break;
         }
     }
+}
+
+bool AiTank::isActive() const
+{
+    return active;
 }
 
 void AiTank::move()

@@ -25,13 +25,13 @@ class EnemyTank : public AiTank
 public:
     // basic constructor
     EnemyTank(World* world, const int& layer, const Turret::Ptr& turret,
-              const std::string& texturename,
-              const Point& init_pos,
-              const int& engine_force, const int& mass, const int& rpm);
+              const std::string& texturename, const Point& init_pos,
+              const int& engine_force, const int& mass, const int& rpm,
+              const int& id);
     // from input file
     EnemyTank(World* world, const int& layer, const Turret::Ptr& turret,
-              const Point& init_pos,
-              const std::string& inputfile);
+              const Point& init_pos, const std::string& inputfile,
+              const int& id);
     virtual ~EnemyTank();
 
     virtual void draw();
@@ -44,6 +44,8 @@ public:
     typedef std::tr1::shared_ptr<EnemyTank> Ptr;
 
 private:
+    // id of enemy, used for releasing friendlies
+    int id;
     // real user position
     Point user_pos;
     // timer for generating new random positions
@@ -58,6 +60,7 @@ private:
     virtual void rotate_turret();
 
     virtual void fire();
+    virtual void die();
 };
 
 #endif // ENEMYTANK_H
