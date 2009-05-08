@@ -69,6 +69,10 @@ public:
     void remCollidable(CollMap::iterator& pos);
     void remControllable(ConList::iterator& pos);
 
+    // get and set game status
+    int getGameStatus() const;
+    void setGameStatus(const int& status);
+
 private:
     // the worldfile that this world is made from
     xmlpp::TextReader worldfile;
@@ -101,6 +105,10 @@ private:
     int map_width, map_height;
     // tile dimensions
     int tw, th;
+
+    // end of game, it is 0 if the game has not ended, 1 for
+    // successful completion of level, 2 for fail
+    int game_status;
 
     // timer
     Timer timer;

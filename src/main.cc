@@ -139,6 +139,20 @@ int main (int argc, char* argv[])
     // main loop
     bool quit = false;
     while (!quit) {
+        // check game status
+        if (world->getGameStatus()) {
+            switch (world->getGameStatus()) {
+            case 1:
+                // success
+                std::cout << "You win!" << std::endl;
+                break;
+            case 2:
+                // fail
+                std::cout << "Fail. Game over." << std::endl;
+                break;
+            }
+            break;
+        }
 	// start fpscap timer
 	fpsCap.start();
 	

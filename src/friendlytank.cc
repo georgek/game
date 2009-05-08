@@ -53,7 +53,12 @@ FriendlyTank::FriendlyTank (World* world, const int& layer,
     // add healthbar to world
     world->addRenderable (health_bar, 10);
 
-    active = false;
+    if (captors.empty()) {
+        active = true;
+    }
+    else {
+        active = false;
+    }
 
     // move items from captor list into this class's list
     this->captors.splice(this->captors.end(), captors);
@@ -100,7 +105,6 @@ void FriendlyTank::update(SDL_Event& event)
         switch (event.user.code) {
         case 3:                 // enemy dead
             int enemy_id = *static_cast<int*>(event.user.data1);
-            std::cout << "Enemy dead: " << enemy_id << std::endl;
             // check if this enemy is in the captor list
             std::list<int>::iterator pos =
                 std::find(captors.begin(), captors.end(), enemy_id);
@@ -108,10 +112,9 @@ void FriendlyTank::update(SDL_Event& event)
                 // it is in the list, so remove it
                 captors.erase(pos);
             }
-            if (captors.empty()) {
+            if (!active && captors.empty()) {
                 // all captors dead, so I am free
                 active = true;
-                std::cout << "I am free!" << std::endl;
             }
             break;
         }

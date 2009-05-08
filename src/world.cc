@@ -33,7 +33,8 @@
 #include "world.h"
 
 World::World (const std::string& inputworldfile) :
-    worldfile (inputworldfile.c_str())
+    worldfile (inputworldfile.c_str()),
+    game_status(0)
 {
     // now parse the worldfile and build the world
     try {
@@ -338,6 +339,16 @@ void World::remControllable (World::ConList::iterator& pos)
     controllables.erase(pos++);
 }
 
+int World::getGameStatus() const
+{
+    return game_status;
+}
+
+void World::setGameStatus(const int& status)
+{
+    game_status = status;
+}
+
 // utility function for parsing the worldfile
 void World::parseWorldFile () 
 {
@@ -541,6 +552,26 @@ void World::parseWorldFile ()
                         }
                     }
                 }
+            }
+            else if (worldfile.get_name() == "objective") {
+                // get the objective
+                int xpos, ypos, radius;
+                std::stringstream s;
+                worldfile.move_to_first_attribute();
+                s << worldfile.get_value().raw();
+                s >> xpos;
+                s.str(""); s.clear();
+                worldfile.move_to_next_attribute();
+                s << worldfile.get_value().raw();
+                s >> ypos;
+                s.str(""); s.clear();
+                worldfile.move_to_next_attribute();
+                s << worldfile.get_value().raw();
+                s >> radius;
+                s.str(""); s.clear();
+
+                // give objective to user tank
+                user_tank->setObjective(Point(xpos, ypos), radius);
             }
 	}
     }

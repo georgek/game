@@ -49,4 +49,5 @@
           bodylayer="1" turretlayer="2"
           xpos="1536" ypos="1400" captors="0 1" />
   </friends>
+  <!-- <objective xpos="1000" ypos="1000" radius="300" /> -->
 </world>

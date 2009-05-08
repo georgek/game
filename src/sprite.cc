@@ -56,7 +56,7 @@ void Sprite::draw()
             curr_frame = curr_frame + timer.get_ticks() / (1000/fps);
             if (curr_frame >= frames) {
                 curr_frame = curr_frame%frames;
-                loops_done = 1;
+                ++loops_done;
             }
             // restart timer
             timer.start();

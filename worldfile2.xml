@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- reference world file -->
+<world>
+  <map width="17" height="23">
+    <!-- textures -->
+    <texture id="0" filename="textures/deadgrass.png" type="png" />
+    <texture id="1" filename="textures/halfgrass.png" type="png" />
+    <texture id="2" filename="textures/grass.png" type="png" />
+    <texture id="3" filename="textures/grasspath.png" type="png" />
+    <texture id="4" filename="textures/grasspathstart.png" type="png" />
+    <texture id="5" filename="textures/grasspathend.png" type="png" />
+    <texture id="6" filename="textures/earth2.png" type="png" />
+    <tiles tile_width="256" tile_height="256">
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="5" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="3" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="3" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="3" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="4" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="6" x="1" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="2" x="0" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+      <t id="0" x="1" />
+    </tiles>
+    <ornaments>
+      <ornament file="tree.xml" collidelayers="1 2" renderlayer="5"
+                xpos="800" ypos="1024" rotation="0" />
+      <ornament file="tree2.xml" collidelayers="1 2" renderlayer="5"
+                xpos="1000" ypos="800" rotation="0" />
+      <ornament file="tree3.xml" collidelayers="1 2" renderlayer="5"
+                xpos="700" ypos="700" rotation="90" />
+    </ornaments>
+  </map>
+  <usertank bodyfile="tank.xml" turretfile="turret.xml" 
+	    bodylayer="1" turretlayer="2" 
+	    xpos="512" ypos="768" />
+  <enemies>
+    <!-- first area -->
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="900" ypos="2000" id="0" />
+
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="1236" ypos="1800" id="1" />
+
+    <!-- second area -->
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="2560" ypos="4352" id="2" />
+
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="2560" ypos="5120" id="3" />
+
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="2816" ypos="4864" id="4" />
+
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="3328" ypos="4352" id="5" />
+
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="3328" ypos="5120" id="6" />
+
+    <!-- third area -->
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="3584" ypos="2560" id="7" />
+
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="2560" ypos="2560" id="8" />
+
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="3328" ypos="2304" id="9" />
+
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="2560" ypos="1792" id="10" />
+
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="3584" ypos="1792" id="11" />
+
+    <tank bodyfile="enemytank.xml" turretfile="enemyturret.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="2816" ypos="1280" id="12" />
+  </enemies>
+  <friends>
+    <!-- first area -->
+    <tank bodyfile="tank2.xml" turretfile="turret2.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="1236" ypos="2000" captors="0 1" />
+
+    <!-- second area -->
+    <tank bodyfile="tank2.xml" turretfile="turret2.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="1536" ypos="4864" captors="2 3" />
+
+    <tank bodyfile="tank2.xml" turretfile="turret2.xml"
+          bodylayer="1" turretlayer="2"
+          xpos="3840" ypos="4864" captors="4 5 6" />
+  </friends>
+  <objective xpos="2816" ypos="512" radius="512" />
+</world>

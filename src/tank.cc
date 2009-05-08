@@ -511,5 +511,11 @@ void Tank::die()
 
     // make turret die
     turret->die();
+
+    // make an explosion effect
+    Sprite::Ptr sprite (new Sprite (world, "textures/explosion2.png",
+                                    worldpos, 3, 20, 1, heading+90));
+    World::RendMap::iterator spritepos = world->addRenderable (sprite, 1);
+    sprite->run(spritepos);
 }
 

@@ -104,6 +104,13 @@ void UserTank::update ()
     event.user.data1 = posi;
     SDL_PushEvent(&event);
 
+    // check to see if we have reached the objective
+    if (worldpos % objective_pos < objective_radius) {
+        // we have
+        world->setGameStatus(1);
+        return;
+    }
+
     // check to see if any friendlies have become active
     ConvoyList::iterator pos = friendlies.begin();
     while (pos != friendlies.end()) {
@@ -118,7 +125,6 @@ void UserTank::update ()
             }
             // move it to convoy list
             convoy.splice(convoy.end(), friendlies, pos++);
-            
         }
         else {
             ++pos;
@@ -126,10 +132,27 @@ void UserTank::update ()
     }
     // check to see if any friendlies in the convoy have died
     pos = convoy.begin();
+    bool prev_removed = false;
     while (pos != convoy.end()) {
         if (!(*pos)->isAlive()) {
             // it has died, remove from convoy
             convoy.erase(pos++);
+            prev_removed = true;
+        }
+        else if (prev_removed) {
+            // previous tank(s) have gone, follow another one
+            if (pos == convoy.begin()) {
+                // this is now first in convoy, follow user
+                (*pos)->follow(this);
+            }
+            else {
+                // follow previous in convoy
+                ConvoyList::iterator pos2 = pos;
+                --pos2;
+                (*pos)->follow((pos2)->get());
+            }
+            prev_removed = false;
+            ++pos;
         }
         else {
             ++pos;
@@ -280,6 +303,12 @@ void UserTank::multiFire()
     }
 }
 
+void UserTank::setObjective (const Point& pos, const int& radius)
+{
+    objective_pos = pos;
+    objective_radius = radius;
+}
+
 void UserTank::move() 
 {
     Tank::move();
@@ -298,6 +327,13 @@ void UserTank::rotate_turret()
     Tank::rotate_turret();
 }
 
+void UserTank::die()
+{
+    Tank::die();
+    // end of game
+    world->setGameStatus(2);
+}
+
 void UserTank::addFriend()
 {
     Turret::Ptr turret (new Turret(world, Point(512,512), 
@@ -305,8 +341,6 @@ void UserTank::addFriend()
     world->addRenderable(turret, 2);
     world->addCollidable(turret, 2);
     std::list<int> captors;
-    captors.push_back(0);
-    captors.push_back(1);
     FriendlyTank::Ptr tank (new FriendlyTank(world, 1, turret,
                                              Point(512,512), 
                                              "tank2.xml",

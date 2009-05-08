@@ -63,6 +63,9 @@ public:
     virtual void fire();
     void multiFire();
 
+    // sets the objective
+    void setObjective(const Point& pos, const int& radius);
+
     // convenience typedef
     typedef std::tr1::shared_ptr<UserTank> Ptr;
 
@@ -77,8 +80,14 @@ private:
     virtual void rotate();
     virtual void rotate_turret();
 
+    virtual void die();
+
     // health bar
     HealthBar::Ptr health_bar;
+
+    // the location of the obective
+    Point objective_pos;
+    int objective_radius;
 
     // function to add a friend tank to the map, for testing only
     void addFriend();
