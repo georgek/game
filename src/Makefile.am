@@ -10,7 +10,7 @@ game_SOURCES = main.cc collidable.h controllable.h point.h point.cc	\
 
 EXTRA_DIST = tools/shared_ptr.h
 
-AM_CXXFLAGS = -g -Wall -ansi -pedantic
+AM_CXXFLAGS = -g -Wall -ansi -pedantic -std=c++11
 
 INCLUDES = $(DEPS_CFLAGS)
 LIBS = $(DEPS_LIBS)
