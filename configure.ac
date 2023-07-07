@@ -1,5 +1,6 @@
 # initialise autoconf
-AC_INIT(README)
+AC_INIT
+AC_CONFIG_SRCDIR([README])
 
 # name of program and version
 AM_INIT_AUTOMAKE(game,0.1)
@@ -29,4 +30,5 @@ DEPS_LIBS="$DEPS_LIBS $SDL_LIBS"
 DEPS_LIBS="$DEPS_LIBS -lGL -lGLU"
 
 # output Makefiles
-AC_OUTPUT(Makefile src/Makefile)
+AC_CONFIG_FILES([Makefile src/Makefile])
+AC_OUTPUT

@@ -113,9 +113,9 @@ int main (int argc, char* argv[])
     Cursor cursor ("textures/crosshair.png", 10);
 
     // make world
-    std::auto_ptr<World> world;
+    std::unique_ptr<World> world;
     try{
-	world = std::auto_ptr<World> (new World (aworldfile));
+	world = std::unique_ptr<World> (new World (aworldfile));
     }
     // catch exception from constructor
     catch (const std::exception& e) {

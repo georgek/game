@@ -62,7 +62,7 @@ public:
     // 6: RGBA
     int                 getColourType() const;
 
-    typedef std::auto_ptr<Texture> aPtr;
+    typedef std::unique_ptr<Texture> aPtr;
     typedef std::tr1::shared_ptr<Texture> sPtr;
     
 private:
