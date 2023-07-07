@@ -1,1 +1,5 @@
 This is my game project for CMPC2G04 Graphics coursework
+
+You have to run it full screen for it to work. So if your screen is 1280x1080:
+
+src/game -w 1920 -h 1080 worldfile2.xml
